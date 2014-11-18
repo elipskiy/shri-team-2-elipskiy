@@ -1,7 +1,4 @@
 .head {
-  font-size: .8em;
-  line-height: 40px;
-
   position: relative;
 
   height: 40px;
@@ -12,6 +9,9 @@
   color: #4c6a72;
   background-color: #fbeecb;
   box-shadow: 0 -2px 0 0 #657b83 inset;
+
+  font-size: .8em;
+  line-height: 40px;
 
   flex-shrink: 0;
 }
@@ -29,11 +29,11 @@
 }
 
 .head__title {
-  font-size: 16px;
-
   display: inline-block;
 
   margin: 0 15px;
+
+  font-size: 16px;
 }
 
 .head__menu {
@@ -55,10 +55,18 @@
 }
 
 .head__visible_hidden {
-  visibility: hidden;
   display: none;
+  visibility: hidden;
 }
 
 .head__visible_visible {
   visibility: visible;
+}
+
+.user__avatar {
+  float: left;
+
+  margin-top: 1px;
+
+  border-radius: 9px;
 }

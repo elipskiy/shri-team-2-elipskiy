@@ -31,13 +31,14 @@ module.exports = function(app, db) {
   });
 
   app.get('/projects', ensureAuthenticated, function(req, res) {
-    var name = req.user.username;
+    var name = req.user.email;
     var rooms = req.user.rooms;
+    var gravatar = req.user.gravatarHash;
 
     db.user.getById(req.user._id).then(function(user) {
       rooms = user.rooms;
 
-      res.render('projects', {user: name, projects: rooms});
+      res.render('projects', {user: name, projects: rooms, gravatar: gravatar});
     });
   });
 
@@ -52,11 +53,18 @@ module.exports = function(app, db) {
   });
 
   app.get('/:id', function(req, res) {
-      var name = '';
-      if (req.user) {
-        name = req.user.username;
-      }
-      res.render('index', {user: name});
+    var name = '';
+    var gravatar = '';
+    if (req.user) {
+      name = req.user.email;
+      gravatar = req.user.gravatarHash;
+    }
+
+    db.room.get(req.params.id).then(function() {
+      res.render('index', {user: name, gravatar: gravatar});
+    }, function() {
+      res.redirect('/projects');
+    });
   });
 
   function ensureAuthenticated(req, res, next) {

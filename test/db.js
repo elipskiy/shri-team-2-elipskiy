@@ -19,11 +19,6 @@ describe('db', function() {
     done();
   });
 
-  // beforeEach(function(done) {
-  //   connection.db.dropDatabase();
-  //   done();
-  // });
-
   after(function(done) {
     connection.close();
     done();
@@ -35,7 +30,7 @@ describe('db', function() {
       var userId = 1;
 
       before(function(done) {
-        db.user.localReg('vasya', 'pass').then(function(user) {
+        db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
           userId = user._id;
           done();
         });
@@ -66,7 +61,7 @@ describe('db', function() {
       var roomId = 1;
 
       before(function(done) {
-        db.user.localReg('vasya', 'pass').then(function(user) {
+        db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
           userId = user._id;
           return userId
         }).then(function(userId) {
@@ -98,13 +93,13 @@ describe('db', function() {
       var roomId = 1;
 
       before(function(done) {
-        db.user.localReg('vasya', 'pass').then(function(user) {
+        db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
           return user._id;
         }).then(function(user) {
           db.room.create({projectname: 'test'}, user).then(function(room) {
             roomId = room.docName;
           }).then(function() {
-            db.user.localReg('vasya2', 'pass').then(function(user) {
+            db.user.localReg('vasya2@test.ru', 'pass').then(function(user) {
               userId = user._id;
               done();
             });
@@ -139,13 +134,13 @@ describe('db', function() {
       var roomId = 1;
 
       before(function(done) {
-        db.user.localReg('vasya', 'pass').then(function(user) {
+        db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
           return user._id;
         }).then(function(user) {
           db.room.create({projectname: 'test'}, user).then(function(room) {
             roomId = room.docName;
           }).then(function() {
-            db.user.localReg('vasya2', 'pass').then(function(user) {
+            db.user.localReg('vasya2@test.ru', 'pass').then(function(user) {
               userId = user._id;
             }).then(function() {
               db.room.update.addUser(roomId, userId).then(function() {
@@ -189,13 +184,13 @@ describe('db', function() {
       var roomId = 1;
 
       before(function(done) {
-        db.user.localReg('vasya', 'pass').then(function(user) {
+        db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
           return user._id;
         }).then(function(user) {
           db.room.create({projectname: 'test'}, user).then(function(room) {
             roomId = room.docName;
           }).then(function() {
-            db.user.localReg('vasya2', 'pass').then(function(user) {
+            db.user.localReg('vasya2@test.ru', 'pass').then(function(user) {
               userId = user._id;
             }).then(function() {
               done();
@@ -227,13 +222,13 @@ describe('db', function() {
       var cursor = {row: 1, collumn: 1};
 
       before(function(done) {
-        db.user.localReg('vasya', 'pass').then(function(user) {
+        db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
           return user._id;
         }).then(function(user) {
           db.room.create({projectname: 'test'}, user).then(function(room) {
             roomId = room.docName;
           }).then(function() {
-            db.user.localReg('vasya2', 'pass').then(function(user) {
+            db.user.localReg('vasya2@test.ru', 'pass').then(function(user) {
               userId = user._id;
             }).then(function() {
               db.room.update.addUser(roomId, userId).then(function() {
@@ -266,10 +261,11 @@ describe('db', function() {
     describe('user.localAuth()', function() {
       var userId = 1;
       var userName = 'vasya';
+      var userEmail = 'vasya@test.ru';
       var userPass = 'pass';
 
       before(function(done) {
-        db.user.localReg(userName, userPass).then(function(user) {
+        db.user.localReg(userEmail, userPass).then(function(user) {
           userId = user._id;
         }).then(function() {
           done();
@@ -282,11 +278,11 @@ describe('db', function() {
       });
 
       it('should return user', function() {
-        return should(db.user.localAuth(userName, userPass)).to.eventually.deep.property('username', userName.toString());
+        return should(db.user.localAuth(userEmail, userPass)).to.eventually.deep.property('email', userEmail.toString());
       });
 
       it('should return False if user not exist', function() {
-        return should(db.user.localAuth('petya', userPass)).to.eventually.be.false;
+        return should(db.user.localAuth('petya@test.ru', userPass)).to.eventually.be.false;
       });
 
       it('should return False if password does not match', function() {
@@ -297,10 +293,11 @@ describe('db', function() {
     describe('user.getUserById()', function() {
       var userId = 1;
       var userName = 'vasya';
+      var userEmail = 'vasya@test.ru';
       var userPass = 'pass';
 
       before(function(done) {
-        db.user.localReg(userName, userPass).then(function(user) {
+        db.user.localReg(userEmail, userPass).then(function(user) {
           userId = user._id;
         }).then(function() {
           done();
@@ -313,7 +310,7 @@ describe('db', function() {
       });
 
       it('should return user', function() {
-        return should(db.user.getById(userId)).to.eventually.deep.property('username', userName.toString());
+        return should(db.user.getById(userId)).to.eventually.deep.property('email', userEmail.toString());
       });
 
       it('should be rejected if user not exist', function() {

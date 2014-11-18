@@ -1,16 +1,16 @@
-mixin head(invisibility, signupVisible, signinVisible)
+mixin head(signupVisible, signinVisible)
   .head
     .head__left
       .head__title Meepo
       if (user)
-        .head__menu(class=invisibility ? 'head__visible_hidden' : '')
+        .head__menu
           a(href='/projects') My Projects
-    .head__right(class=invisibility ? 'head__visible_hidden' : '')
+          a(href='/settings') Settings
+    .head__right
       if (user)
+        img.head__user.user__avatar(src='http://www.gravatar.com/avatar/' + gravatar + '?s=36&d=blank')
         .head__user.user__name #{user}
         a.head__user.user__logout(href='/logout') Sign Out
-        a.head__user.user__logout(href='/signup' class=signupVisible ? 'head__visible_visible' : 'head__visible_hidden') Sign Up
-        a.head__user.user__logout(href='/' class=signinVisible ? 'head__visible_visible' : 'head__visible_hidden') Sign In
       else
-        a.head__user.user__logout(href='/signup' class=signupVisible ? 'head__visible_visible' : '') Sign Up
-        a.head__user.user__logout(href='/' class=signinVisible ? 'head__visible_visible' : '') Sign In
+        a.head__user.user__logout(href='/signup' class=signupVisible ? 'head__visible_visible' : 'head__visible_hidden') Sign Up
+        a.head__user.user__logout(href='/' class=signinVisible ? 'head__visible_visible' : 'head__visible_hidden') Log In

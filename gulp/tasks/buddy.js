@@ -4,8 +4,8 @@ var config = require('../config');
 
 gulp.task('buddy', function () {
   return gulp.src([
-    config.clientSrc,
-    config.serverSrc
+    config.js.clientSrc,
+    config.js.serverSrc
   ].concat(config.js.ignoreSrc).concat('!server/libs/**'))
     .pipe(buddyjs({
       reporter: 'detailed'

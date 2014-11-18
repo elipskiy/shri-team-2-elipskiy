@@ -10,5 +10,8 @@ module.exports.require = [
   },
   {
     block: 'head'
+  },
+  {
+    block: 'statusbar'
   }
 ];

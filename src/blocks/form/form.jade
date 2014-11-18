@@ -3,12 +3,6 @@ mixin form(action, butName)
     .form
       h1.form__title= butName
       form(action=action, method="post")
-        div.form__input
-          p.form__error #{error}
-          label Username:
-          input(type='text', name='username')
-        div.form__input
-          label Password:
-          input(type='password', name='password')
+        block
         div.form__input
           +button(butName)

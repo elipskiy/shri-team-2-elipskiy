@@ -13,10 +13,13 @@ module.exports = function(passport) {
     done(null, obj);
   });
 
-  passport.use('local-signin', new LocalStrategy(
-    {passReqToCallback: true},
-    function(req, username, password, done) {
-      db.user.localAuth(username, password).then(function(user) {
+  passport.use('local-signin', new LocalStrategy({
+      passReqToCallback: true,
+      usernameField: 'email',
+      passwordField: 'password'
+    },
+    function(req, email, password, done) {
+      db.user.localAuth(email, password).then(function(user) {
         if (user) {
           req.session.success = 'You are successfully logged in ' + user + '!';
           done(null, user);
@@ -25,24 +28,29 @@ module.exports = function(passport) {
           done(null, user);
         }
       }, function(err) {
-        console.log(err);
+        req.session.error = err;
+        done(null, null);
       });
     }
   ));
 
-  passport.use('local-signup', new LocalStrategy(
-    {passReqToCallback: true},
-    function(req, username, password, done) {
-      db.user.localReg(username, password).then(function(user) {
+  passport.use('local-signup', new LocalStrategy({
+      passReqToCallback: true,
+      usernameField: 'email',
+      passwordField: 'password'
+    },
+    function(req, email, password, done) {
+      db.user.localReg(email, password).then(function(user) {
         if (user) {
           req.session.success = 'You are successfully registered and logged in ' + user + '!';
           done(null, user);
         } else if (!user) {
-          req.session.error = 'That username is already in use, please try a different one.';
+          req.session.error = 'That email is already in use, please try a different one.';
           done(null, user);
         }
       }, function(err) {
-        console.log(err);
+        req.session.error = err;
+        done(null, null);
       });
     }
   ));

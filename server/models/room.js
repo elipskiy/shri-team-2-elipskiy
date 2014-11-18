@@ -19,7 +19,7 @@ var RoomSchema = new Schema({
   },
   name: {
     type: String,
-    require: true,
+    require: true
   },
   description: {
     type: String,

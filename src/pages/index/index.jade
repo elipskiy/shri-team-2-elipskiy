@@ -5,7 +5,7 @@ html(lang='en')
     title Meepo
     link(rel='stylesheet', href='css/index.css')
   body.theme_dark
-    +head
+    +head(true, true)
     .splitview
       .splitview__panel.splitview__panel_editor
         +editor
@@ -18,5 +18,4 @@ html(lang='en')
     +statusbar
 
     script(src='/channel/bcsocket.js')
-    script(src='//cdnjs.cloudflare.com/ajax/libs/annyang/1.4.0/annyang.min.js')
     script(src='js/index.js')

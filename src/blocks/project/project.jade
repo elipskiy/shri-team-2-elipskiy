@@ -9,3 +9,11 @@ mixin newProject
         textarea(name='description', placeholder='Description')
       div.form__input
          +button('Create', true)
+
+mixin myProject
+  h1 My Projects
+  ul.projects__list
+    each val, index in projects
+      li
+        a.projects__list_name(href=val.room.docName)= val.room.name
+        p.projects__list_description= val.room.description

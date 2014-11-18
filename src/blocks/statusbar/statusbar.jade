@@ -1,4 +1,6 @@
-mixin statusbar
+mixin statusbar(onlyColor)
   .statusbar
-    div(style='float: right;') Spaces: 2, JavaScript
-    span#statusbar__position Line: ~, Column: ~
+    span.statusbar__change-theme
+    if (!onlyColor && user)
+      span(style='float: right;') Spaces: 2, JavaScript
+      span#statusbar__position Line: ~, Column: ~

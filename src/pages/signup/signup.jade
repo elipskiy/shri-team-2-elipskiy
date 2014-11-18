@@ -5,5 +5,21 @@ html(lang='en')
     title Meepo
     link(rel='stylesheet', href='css/signup.css')
   body.theme_dark
-    +head(true, false, true)
+    +head(false, true)
     +form('/local-reg', 'Sign up')
+      .form__input
+        p.form__error #{error}
+        label(for='email') Email:
+        input(type='text', name='email', id='email')
+      .form__input
+        label(for='password') Password:
+        input(type='password', name='password', id='password')
+        .hint
+          label(for='showpass') show password:
+          input(type='checkbox', name='showpassword', id='showpass')
+      //- .form__input
+        //- label(for='email') Email:
+        //- input(type='text', name='email', id='email', placeholder='not required')
+    +statusbar(true)
+
+    script(src='js/signup.js')

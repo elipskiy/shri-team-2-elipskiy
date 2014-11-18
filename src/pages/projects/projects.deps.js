@@ -16,5 +16,8 @@ module.exports.require = [
   },
   {
     block: 'project'
+  },
+  {
+    block: 'statusbar'
   }
 ];

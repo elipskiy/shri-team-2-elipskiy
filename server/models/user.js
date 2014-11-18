@@ -8,8 +8,15 @@ var Schema = mongoose.Schema;
 var UserSchema = new Schema({
   username: {
     type: String,
+    unique: true
+  },
+  email: {
+    type: String,
     required: true,
     unique: true
+  },
+  gravatarHash: {
+    type: String
   },
   firstName: {
     type: String
@@ -35,6 +42,14 @@ var UserSchema = new Schema({
     type: Date,
     default: Date.now
   }
+});
+
+UserSchema.pre('save', function(next) {
+  if (this.email) {
+    this.gravatarHash = crypto.createHash('md5').update(this.email.toLowerCase().trim()).digest('hex');
+  }
+
+  next();
 });
 
 UserSchema.methods = {
@@ -70,13 +85,19 @@ UserSchema.methods = {
 UserSchema.statics = {
   getUser: function(userId, cb) {
     this.findById(userId)
-      .populate('rooms.room', 'name description docName readOnly')
+      .populate('rooms.room', 'name description docName readOnly', null, {sort: '-createdAt'})
       .exec(cb);
   },
 
   findUserByName: function(userName, cb) {
     this.findOne({username: userName})
-      .populate('rooms.room', 'name description docName readOnly')
+      .populate('rooms.room', 'name description docName readOnly', null, {sort: '-createdAt'})
+      .exec(cb);
+  },
+
+  findUserByEmail: function(userEmail, cb) {
+    this.findOne({email: userEmail})
+      .populate('rooms.room', 'name description docName readOnly', null, {sort: '-createdAt'})
       .exec(cb);
   }
 };
@@ -99,6 +120,20 @@ UserSchema.virtual('fullname')
   .get(function() {
     return this.firstName + ' ' + this.lastName;
   });
+
+UserSchema.path('username').validate(function(username) {
+  return username.length;
+}, 'Username cannot be blank');
+
+UserSchema.path('username').validate(function(username) {
+  var usernameRegex = /^[a-zA-Z0-9]+$/;
+  return usernameRegex.test(username);
+}, 'The specified username is invalid.');
+
+UserSchema.path('email').validate(function(email) {
+  var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+  return emailRegex.test(email);
+}, 'The specified email is invalid.');
 
 var UserModel = mongoose.model('User', UserSchema);
 

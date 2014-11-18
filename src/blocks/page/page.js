@@ -1,10 +1,9 @@
 'use strict';
 
-require('../../js/voiceCommander');
-var connection = require('../../js/connection');
+var $ = require('jquery');
 
-var editor = require('../editor/editor')('ace');
-
-editor.init();
-connection.connect();
-
+if (localStorage.MeppoTheme === 'light') {
+  $('body').removeClass('theme_dark');
+} else {
+  $('body').addClass('theme_dark');
+}

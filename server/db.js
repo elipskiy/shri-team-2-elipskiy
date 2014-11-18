@@ -25,6 +25,7 @@ function createRoom(room, creator) {
         } else {
           UserModel.getUser(creator, function(err, user) {
             if (err) {
+              console.log(err);
               reject(err);
             } else if (user) {
               user.addRoom(room.id);
@@ -136,18 +137,24 @@ function getUser(roomId, userId) {
   });
 }
 
-function userLocalRegister(userName, userPassword) {
+function userLocalRegister(userEmail, userPassword) {
   return new Promise(function(resolve, reject) {
-    UserModel.findUserByName(userName, function(err, user) {
+    UserModel.findUserByEmail(userEmail, function(err, user) {
       if (err) {
         reject(err);
       } else if (user) {
         resolve(false);
       } else {
-        user = new UserModel({username: userName, password: userPassword});
+        user = new UserModel({email: userEmail, password: userPassword});
         user.save(function(err, user) {
           if (err) {
-            reject(err);
+            if (err.errors) {
+              if (err.errors.email) {
+                reject(err.errors.email.message);
+              }
+            } else {
+              reject(err);
+            }
           } else {
             resolve(user);
           }
@@ -157,9 +164,9 @@ function userLocalRegister(userName, userPassword) {
   });
 }
 
-function userLocalAuth(userName, userPassword) {
+function userLocalAuth(userEmail, userPassword) {
   return new Promise(function(resolve, reject) {
-    UserModel.findUserByName(userName, function(err, user) {
+    UserModel.findUserByEmail(userEmail, function(err, user) {
       if (err) {
         reject(err);
       } else if (user) {
