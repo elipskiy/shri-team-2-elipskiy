@@ -94,7 +94,7 @@ io.on('connection', function(socket) {
     }).then(function(users) {
       io.to(roomId).emit('usersUpdate', users);
     }).catch(function(error) {
-      console.log(error);
+      console.log('userConnect: ', error);
     });
   });
 
@@ -129,7 +129,7 @@ io.on('connection', function(socket) {
     }).then(function(user) {
       io.to(roomId).emit('markerUpdate', user);
     }).catch(function(error) {
-      console.log(error);
+      console.log('userCursorPosition: ', error);
     });
   });
 });

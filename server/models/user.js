@@ -2,13 +2,13 @@
 
 var mongoose = require('mongoose');
 var crypto = require('crypto');
+var Promise = require('es6-promise').Promise;
 
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
   username: {
-    type: String,
-    unique: true
+    type: String
   },
   email: {
     type: String,
@@ -58,15 +58,33 @@ UserSchema.methods = {
   },
 
   checkPassword: function(password) {
-    return this.encryptPassword(password) === this.hashedPassword;
+    var user = this;
+
+    return new Promise(function(resolve, reject) {
+      if (user.encryptPassword(password) === user.hashedPassword) {
+        resolve(user);
+      } else {
+        reject('Incorrect password');
+      }
+    });
   },
 
-  addRoom: function(roomId, cb) {
-    this.rooms.push({
-      room: roomId,
-    });
+  addRoom: function(roomId) {
+    var user = this;
 
-    this.save(cb);
+    return new Promise(function(resolve, reject) {
+      user.rooms.push({
+        room: roomId
+      });
+
+      user.save(function(err, user) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(user);
+        }
+      });
+    });
   },
 
   deleteRoom: function(roomId, cb) {
@@ -79,26 +97,129 @@ UserSchema.methods = {
     });
 
     this.save(cb);
+  },
+
+  getRoomById: function(docName) {
+    var user = this;
+
+    return new Promise(function(resolve, reject) {
+      user.rooms.some(function(room, pos) {
+        if (room.room.docName === docName) {
+          resolve(room.room);
+        }
+      });
+
+      reject(new Error('Room does not exist'));
+    });
   }
 };
 
 UserSchema.statics = {
-  getUser: function(userId, cb) {
-    this.findById(userId)
-      .populate('rooms.room', 'name description docName readOnly', null, {sort: '-createdAt'})
-      .exec(cb);
+  findUserById: function(userId) {
+    var user = this;
+
+    return new Promise(function(resolve, reject) {
+      user.findById(userId)
+        .populate({
+          path: 'rooms.room',
+          match: {deleted: false},
+          select: 'name description docName readOnly createdAt',
+          options: {sort: '-createdAt', lean: true}
+        })
+        .exec(function(err, user) {
+          if (err) {
+            reject(err);
+          } else if (user) {
+            user.rooms = user.rooms.filter(function(room) {
+              if (room.room) {
+                return true;
+              } else {
+                return false;
+              }
+            });
+            resolve(user);
+          } else {
+            reject('User does not exist');
+          }
+        });
+    });
   },
 
-  findUserByName: function(userName, cb) {
-    this.findOne({username: userName})
-      .populate('rooms.room', 'name description docName readOnly', null, {sort: '-createdAt'})
-      .exec(cb);
+  findUserByName: function(userName) {
+    var user = this;
+
+    return new Promise(function(resolve, reject) {
+      user.findOne({username: userName})
+        .populate({
+          path: 'rooms.room',
+          match: {deleted: false},
+          select: 'name description docName readOnly createdAt',
+          options: {sort: '-createdAt', lean: true}
+        })
+        .exec(function(err, user) {
+          if (err) {
+            reject(err);
+          } else if (user) {
+            user.rooms = user.rooms.filter(function(room) {
+              if (room.room) {
+                return true;
+              } else {
+                return false;
+              }
+            });
+            resolve(user);
+          } else {
+            reject('User does not exist');
+          }
+        });
+    });
   },
 
-  findUserByEmail: function(userEmail, cb) {
-    this.findOne({email: userEmail})
-      .populate('rooms.room', 'name description docName readOnly', null, {sort: '-createdAt'})
-      .exec(cb);
+  findUserByEmail: function(userEmail) {
+    var user = this;
+
+    return new Promise(function(resolve, reject) {
+      user.findOne({email: userEmail})
+        .populate({
+          path: 'rooms.room',
+          match: {deleted: false},
+          select: 'name description docName readOnly createdAt',
+          options: {sort: '-createdAt', lean: true}
+        })
+        .exec(function(err, user) {
+          if (err) {
+            reject(err);
+          } else if (user) {
+            user.rooms = user.rooms.filter(function(room) {
+              if (room.room) {
+                return true;
+              } else {
+                return false;
+              }
+            });
+            resolve(user);
+          } else {
+            reject('User does not exist');
+          }
+        });
+    });
+  },
+
+  checkFreeEmail: function(userEmail) {
+    var user = this;
+
+    return new Promise(function(resolve, reject) {
+      user.findOne({email: userEmail})
+        .exec(function(err, foundUser) {
+          if (err) {
+            reject(err);
+          } else if (foundUser) {
+            reject('Email already in use');
+          } else {
+            resolve(true);
+          }
+        });
+    });
   }
 };
 

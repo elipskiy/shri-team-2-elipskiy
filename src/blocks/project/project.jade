@@ -16,4 +16,6 @@ mixin myProject
     each val, index in projects
       li
         a.projects__list_name(href=val.room.docName)= val.room.name
+        a.projects__list_remove(href='/remove/' + val.room.docName)
+          .icon
         p.projects__list_description= val.room.description

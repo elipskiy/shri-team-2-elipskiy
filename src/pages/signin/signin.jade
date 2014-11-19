@@ -8,7 +8,8 @@ html(lang='en')
     +head(true, false)
     +form('/local-auth', 'Sign in')
       div.form__input
-        p.form__error #{error}
+        if (error)
+          p.form__error #{error}
         label Email:
         input(type='text', name='email')
       div.form__input

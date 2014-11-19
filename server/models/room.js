@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var colorize = require('../libs/colorize');
 var id = require('../libs/idGenerator');
+var Promise = require('es6-promise').Promise;
 
 var Schema = mongoose.Schema;
 
@@ -47,6 +48,10 @@ var RoomSchema = new Schema({
   colors: [{
     type: String
   }],
+  deleted: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -63,39 +68,64 @@ RoomSchema.pre('save', function(next) {
 });
 
 RoomSchema.methods = {
-  addUser: function(userId, cb) {
-    this.users.push({
-      user: userId,
-      userColor: this.getColor()
-    });
+  addUser: function(userId) {
+    var room = this;
 
-    this.save(cb);
+    return new Promise(function(resolve, reject) {
+      room.users.push({
+        user: userId,
+        userColor: room.getColor()
+      });
+
+      room.save(function(err, room) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(room);
+        }
+      });
+    });
   },
 
-  removeUser: function(userId, cb) {
-    var _this = this;
-    var foundUser = false;
+  removeUser: function(userId) {
+    var room = this;
 
-    this.users.some(function(user, pos) {
-      if (user.user.toString() === userId.toString()) {
-        _this.restoreColor(user.userColor);
-        _this.users.splice(pos, 1);
-        foundUser = true;
-      }
+    return new Promise(function(resolve, reject) {
+      room.users.some(function(user, pos) {
+        if (user.user.toString() === userId.toString()) {
+          room.restoreColor(user.userColor);
+          room.users.splice(pos, 1);
+        }
+      });
+
+      room.save(function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(true);
+        }
+      });
     });
-
-    this.save();
-    cb(foundUser);
   },
 
-  userSetCursor: function(userId, position, cb) {
-    this.users.some(function(user) {
-      if (user.user.toString() === userId.toString()) {
-        user.userCursor = position;
-      }
-    });
+  userSetCursor: function(userId, position) {
+    var room = this;
 
-    this.save(cb);
+    return new Promise(function(resolve, reject) {
+      room.users.some(function(user, pos) {
+        if (user.user.toString() === userId.toString()) {
+          user.userCursor = position;
+        }
+      });
+
+      room.save(function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(true);
+        }
+      });
+    });
   },
 
   getColor: function() {
@@ -115,54 +145,130 @@ RoomSchema.methods = {
     this.colors.push(color);
 
     this.save();
+  },
+
+  delete: function() {
+    var room = this;
+
+    return new Promise(function(resolve, reject) {
+      room.deleted = true;
+      room.save(function(err, room) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(room);
+        }
+      });
+    });
+  },
+
+  restore: function() {
+    var room = this;
+
+    return new Promise(function(resolve, reject) {
+      room.deleted = false;
+      room.save(function(err, room) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(room);
+        }
+      });
+    });
   }
 };
 
 RoomSchema.statics = {
-  getRoom: function(roomId, cb) {
-    this.findOne({docName: roomId}, cb);
+  getRoom: function(docName) {
+    var room = this;
+
+    return new Promise(function(resolve, reject) {
+      room.findOne({docName: docName})
+        .exec(function(err, foundRoom) {
+          if (err) {
+            reject(err);
+          } else if (foundRoom) {
+            resolve(foundRoom);
+          } else {
+            reject(new Error('Room does not exist'));
+          }
+        });
+    });
   },
 
-  getUsers: function(roomId, cb) {
-    this.findOne({docName: roomId})
-      .populate('users.user', 'username')
-      .exec(function(err, data) {
-        if (err || !data) {
-          cb(err, null);
-        } else {
-          var resUsers = [];
-          data.users.some(function(user) {
-            resUsers.push(transformUser(user));
-          });
-          cb(null, resUsers);
-        }
-      });
+  getRoomWithCreator: function(docName, creator) {
+    var room = this;
+
+    return new Promise(function(resolve, reject) {
+      room.findOne({docName: docName, creator: creator})
+        .exec(function(err, foundRoom) {
+          if (err) {
+            reject(err);
+          } else if (foundRoom) {
+            resolve(foundRoom);
+          } else {
+            reject(new Error('Room does not exist'));
+          }
+        });
+    });
   },
 
-  getUser: function(roomId, userId, cb) {
-    this.findOne({docName: roomId, 'users.user': userId})
-      .populate('users.user', 'username')
-      .exec(function(err, data) {
-        if (err || !data) {
-          cb(err, null);
-        } else {
-          data.users.some(function(user) {
-            if (user.user._id.toString() === userId.toString()) {
-              cb(null, transformUser(user));
+  getUsers: function(docName) {
+    var room = this;
+
+    return new Promise(function(resolve, reject) {
+      room.findOne({docName: docName})
+        .populate('users.user', 'email')
+        .exec(function(err, foundUsers) {
+          if (err) {
+            reject(err);
+          } else {
+            var resUsers = [];
+            foundUsers.users.some(function(user) {
+              resUsers.push(transformUser(user));
+            });
+            resolve(resUsers);
+          }
+        });
+    });
+  },
+
+  getUser: function(docName, userId) {
+    var room = this;
+
+    return new Promise(function(resolve, reject) {
+      // room.findOne({docName: docName, 'users.user': userId})
+      room.findOne({docName: docName})
+        .populate('users.user', 'email')
+        .exec(function(err, foundUsers) {
+          if (err) {
+            reject(err);
+          } else {
+            var foundUser;
+            foundUsers.users.some(function(user) {
+              if (user.user._id.toString() === userId.toString()) {
+                foundUser = transformUser(user);
+              }
+            });
+
+            if (foundUser) {
+              resolve(foundUser);
+            } else {
+              reject(new Error('getUser(): such user not found'));
             }
-          });
-        }
-      });
+          }
+        });
+    });
   }
 };
 
 var transformUser = function(user) {
-  var resUser = {};
-  resUser.userId = user.user._id.toString();
-  resUser.userName = user.user.username;
-  resUser.userColor = user.userColor;
-  resUser.userCursor = user.userCursor;
-  return resUser;
+  return {
+    userId: user.user._id.toString(),
+    userName: user.user.email,
+    userColor: user.userColor,
+    userCursor: user.userCursor
+  };
 };
 
 var RoomModel = mongoose.model('Room', RoomSchema);

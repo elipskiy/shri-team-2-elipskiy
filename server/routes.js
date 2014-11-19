@@ -42,25 +42,31 @@ module.exports = function(app, db) {
     });
   });
 
-  app.post('/new-project', function(req, res) {
+  app.post('/new-project', ensureAuthenticated, function(req, res) {
     db.room.create(req.body, req.user._id).then(function(room) {
       res.redirect('/' + room.docName);
     }, function(err) {
-      console.log(err);
       req.session.error = err;
       res.redirect('/projects');
     });
   });
 
-  app.get('/:id', function(req, res) {
-    var name = '';
-    var gravatar = '';
-    if (req.user) {
-      name = req.user.email;
-      gravatar = req.user.gravatarHash;
-    }
+  app.get('/remove/:id', ensureAuthenticated, function(req, res) {
+    db.room.remove(req.params.id, req.user._id).then(function(room) {
+      res.redirect('/projects');
+    }, function() {
+      res.redirect('/projects');
+    });
+  });
 
-    db.room.get(req.params.id).then(function() {
+  app.get('/:id', function(req, res) {
+    db.room.get(req.params.id).then(function(room) {
+      var name = '';
+      var gravatar = '';
+      if (req.user) {
+        name = req.user.email;
+        gravatar = req.user.gravatarHash;
+      }
       res.render('index', {user: name, gravatar: gravatar});
     }, function() {
       res.redirect('/projects');

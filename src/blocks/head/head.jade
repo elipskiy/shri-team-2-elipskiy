@@ -4,13 +4,13 @@ mixin head(signupVisible, signinVisible)
       .head__title Meepo
       if (user)
         .head__menu
-          a(href='/projects') My Projects
-          a(href='/settings') Settings
+          a(href='/projects') Projects
+          a(href='/settings') Profile
     .head__right
       if (user)
-        img.head__user.user__avatar(src='http://www.gravatar.com/avatar/' + gravatar + '?s=36&d=blank')
+        img.head__user.user__avatar(src='http://www.gravatar.com/avatar/' + gravatar + '?s=30&d=blank')
         .head__user.user__name #{user}
-        a.head__user.user__logout(href='/logout') Sign Out
+        a.head__user.user__logout(href='/logout') Log Out
       else
         a.head__user.user__logout(href='/signup' class=signupVisible ? 'head__visible_visible' : 'head__visible_hidden') Sign Up
         a.head__user.user__logout(href='/' class=signinVisible ? 'head__visible_visible' : 'head__visible_hidden') Log In

@@ -14,7 +14,13 @@ module.exports = function(a) {
 
   var editor = ace.edit('editor');
 
-  editor.setTheme('ace/theme/solarized_dark');
+  if (localStorage.MeppoTheme === 'light') {
+    editor.setTheme('ace/theme/solarized_light');
+  } else {
+    editor.setTheme('ace/theme/solarized_dark');
+  }
+
+  // editor.setTheme('ace/theme/solarized_dark');
   editor.getSession().setMode('ace/mode/javascript');
   editor.setReadOnly(true);
 
@@ -32,6 +38,8 @@ module.exports = function(a) {
   }
 
   function updateCursorMarker(data) {
+    console.log(data);
+
     if (me.id() === data.userId) {
       return true;
     }
