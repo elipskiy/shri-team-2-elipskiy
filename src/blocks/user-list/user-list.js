@@ -3,8 +3,9 @@
 var socket = require('../../js/socket');
 var $ = require('jquery');
 
+var userList = $('.user-list');
+
 function onUsersUpdate(users) {
-  var userList = $('.user-list');
   userList.empty();
 
   users.forEach(function(user) {

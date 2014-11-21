@@ -3,13 +3,16 @@ module.exports.require = [
     block: 'page'
   },
   {
-    block: 'user-list'
-  },
-  {
-    block: 'grid'
+    block: 'head'
   },
   {
     block: 'statusbar'
+  },
+  {
+    block: 'splitview'
+  },
+  {
+    block: 'connect'
   },
   {
     block: 'editor'
@@ -18,15 +21,12 @@ module.exports.require = [
     block: 'tab'
   },
   {
-    block: 'setting'
-  },
-  {
-    block: 'head'
-  },
-  {
-    block: 'splitview'
+    block: 'user-list'
   },
   {
     block: 'chat'
+  },
+  {
+    block: 'setting'
   }
 ];

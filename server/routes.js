@@ -1,8 +1,9 @@
 'use strict';
 
 var passport = require('passport');
+var db = require('./db.js');
 
-module.exports = function(app, db) {
+module.exports = function(app) {
 
   app.get('/', function(req, res) {
     res.render('signin');
@@ -31,14 +32,13 @@ module.exports = function(app, db) {
   });
 
   app.get('/projects', ensureAuthenticated, function(req, res) {
-    var name = req.user.email;
-    var rooms = req.user.rooms;
+    var email = req.user.email;
     var gravatar = req.user.gravatarHash;
 
     db.user.getById(req.user._id).then(function(user) {
-      rooms = user.rooms;
+      var rooms = user.rooms;
 
-      res.render('projects', {user: name, projects: rooms, gravatar: gravatar});
+      res.render('projects', {user: email, projects: rooms, gravatar: gravatar});
     });
   });
 
@@ -53,6 +53,7 @@ module.exports = function(app, db) {
 
   app.get('/remove/:id', ensureAuthenticated, function(req, res) {
     db.room.remove(req.params.id, req.user._id).then(function(room) {
+      req.session.success = 'Room is deleted';
       res.redirect('/projects');
     }, function() {
       res.redirect('/projects');

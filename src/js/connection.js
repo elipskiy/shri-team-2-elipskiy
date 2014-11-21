@@ -6,8 +6,8 @@ function onConnect() {
   socket.emit('connectToRoom', window.location.pathname.slice(1));
 }
 
-function connect(userName) {
-  socket.emit('userConnect', userName);
+function connect() {
+  socket.emit('userConnect');
 }
 
 socket.on('connect', onConnect);

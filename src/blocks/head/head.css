@@ -64,9 +64,7 @@
 }
 
 .user__avatar {
-  float: left;
-
-  margin-top: 4px;
+  vertical-align: middle;
 
   border-radius: 4px;
 }

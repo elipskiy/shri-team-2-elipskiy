@@ -3,21 +3,18 @@ module.exports.require = [
     block: 'page'
   },
   {
-    block: 'button'
+    block: 'head'
   },
   {
-    block: 'head'
+    block: 'statusbar'
   },
   {
     block: 'splitview'
   },
   {
-    block: 'button'
-  },
-  {
     block: 'project'
   },
   {
-    block: 'statusbar'
+    block: 'button'
   }
 ];
