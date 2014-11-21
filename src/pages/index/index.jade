@@ -15,6 +15,9 @@ html(lang='en')
             +user-list
           +tab('Settings:', false)
             +setting
+          if (user)
+            +tab('Chat:', true)
+              +chat
     +statusbar
 
     script(src='/channel/bcsocket.js')

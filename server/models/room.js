@@ -32,7 +32,6 @@ var RoomSchema = new Schema({
   },
   users: [{
     user: {
-      // type: String,
       type: Schema.ObjectId,
       ref: 'User'
     },
@@ -72,10 +71,19 @@ RoomSchema.methods = {
     var room = this;
 
     return new Promise(function(resolve, reject) {
-      room.users.push({
-        user: userId,
-        userColor: room.getColor()
+      var foundUser = false;
+      room.users.some(function(user) {
+        if (user.user.toString() === userId.toString()) {
+          foundUser = true;
+        }
       });
+
+      if (!foundUser) {
+        room.users.push({
+          user: userId,
+          userColor: room.getColor()
+        });
+      }
 
       room.save(function(err, room) {
         if (err) {
@@ -218,7 +226,7 @@ RoomSchema.statics = {
 
     return new Promise(function(resolve, reject) {
       room.findOne({docName: docName})
-        .populate('users.user', 'email')
+        .populate('users.user', 'email gravatarHash')
         .exec(function(err, foundUsers) {
           if (err) {
             reject(err);
@@ -237,9 +245,8 @@ RoomSchema.statics = {
     var room = this;
 
     return new Promise(function(resolve, reject) {
-      // room.findOne({docName: docName, 'users.user': userId})
       room.findOne({docName: docName})
-        .populate('users.user', 'email')
+        .populate('users.user', 'email gravatarHash')
         .exec(function(err, foundUsers) {
           if (err) {
             reject(err);
@@ -266,6 +273,7 @@ var transformUser = function(user) {
   return {
     userId: user.user._id.toString(),
     userName: user.user.email,
+    userGravatar: user.user.gravatarHash,
     userColor: user.userColor,
     userCursor: user.userCursor
   };

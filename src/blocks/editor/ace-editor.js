@@ -38,8 +38,6 @@ module.exports = function(a) {
   }
 
   function updateCursorMarker(data) {
-    console.log(data);
-
     if (me.id() === data.userId) {
       return true;
     }

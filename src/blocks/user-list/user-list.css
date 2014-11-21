@@ -1,4 +1,6 @@
 .user-list {
+  position: absolute;
+
   overflow: auto;
 
   width: 100%;

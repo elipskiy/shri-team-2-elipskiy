@@ -132,6 +132,26 @@ io.on('connection', function(socket) {
       console.log('userCursorPosition: ', error);
     });
   });
+
+  socket.on('userChatMessage', function(message) {
+    if (socket.readonly) {
+      return;
+    }
+
+    var roomId = socket.roomId;
+    var userId = socket.userId;
+
+    db.room.user.get(roomId, userId).then(function(user) {
+      io.to(roomId).emit('userChatMessage', {user: user, message: message});
+    });
+    // db.room.user.setCursor(roomId, userId, position).then(function() {
+    //   return db.room.user.get(roomId, userId);
+    // }).then(function(user) {
+    //   io.to(roomId).emit('markerUpdate', user);
+    // }).catch(function(error) {
+    //   console.log('userCursorPosition: ', error);
+    // });
+  });
 });
 
 var server = http.listen(SERVER_PORT, function() {

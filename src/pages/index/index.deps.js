@@ -25,5 +25,8 @@ module.exports.require = [
   },
   {
     block: 'splitview'
+  },
+  {
+    block: 'chat'
   }
 ];

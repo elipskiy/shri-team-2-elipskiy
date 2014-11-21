@@ -37,7 +37,7 @@ function openDocument(docName) {
     }
 
     if (doc.created) {
-      doc.insert(0, '(function() {\n  console.log(\'Hello, wolrd!\');\n})();\n');
+      doc.insert(0, '(function() {\n  console.log(\'Hello, wolrd!\');\n  //Share your link! (' + document.location.href + ')\n})();\n');
     }
     editor.attachToDocument(doc);
   });
