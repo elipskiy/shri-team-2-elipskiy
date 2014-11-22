@@ -55,6 +55,41 @@ describe('db', function() {
 
     });
 
+    describe('remove()', function() {
+      var userId = 1;
+      var roomId = 1;
+
+      before(function(done) {
+        db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
+          userId = user._id;
+          return userId;
+        }).then(function(userId) {
+          db.room.create({projectname: 'test'}, userId).then(function(room) {
+            roomId = room.docName;
+            done();
+          });
+        })
+      });
+
+      after(function(done) {
+        connection.db.dropDatabase();
+        done();
+      });
+
+      it('should be rejected if room name does not exist', function() {
+        return should(db.room.remove(1, userId)).to.be.rejected;
+      });
+
+      it('should be rejected if creator not found', function() {
+        return should(db.room.remove(roomId, 1)).to.be.rejected;
+      });
+
+      it('should remove room', function() {
+        return should(db.room.remove(roomId, userId)).to.eventually.be.true;
+      });
+
+    });
+
 
     describe('getRoom()', function() {
       var userId = 1;
@@ -63,7 +98,7 @@ describe('db', function() {
       before(function(done) {
         db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
           userId = user._id;
-          return userId
+          return userId;
         }).then(function(userId) {
           db.room.create({projectname: 'test'}, userId).then(function(room) {
             roomId = room.docName;
@@ -83,6 +118,43 @@ describe('db', function() {
 
       it('should be rejected if room doesnt exist', function() {
         return should(db.room.get(2)).to.be.rejected;
+      });
+
+    });
+
+    describe('getUsers()', function() {
+      var userId = 1;
+      var roomId = 1;
+
+      before(function(done) {
+        db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
+          return user._id;
+        }).then(function(user) {
+          db.room.create({projectname: 'test'}, user).then(function(room) {
+            roomId = room.docName;
+          }).then(function() {
+            db.user.localReg('vasya2@test.ru', 'pass').then(function(user) {
+              userId = user._id;
+            }).then(function() {
+              done();
+            });
+          });
+        });
+      });
+
+      after(function(done) {
+        connection.db.dropDatabase();
+        done();
+      });
+
+      it('should return users from room', function() {
+        return db.room.update.addUser(roomId, userId).then(function() {
+          return should(db.room.getUsers(roomId)).to.eventually.deep.property('[0].userId', userId.toString());
+        });
+      });
+
+      it('should be rejected if room doesnt exist', function() {
+        return should(db.room.getUsers(2)).to.be.rejected;
       });
 
     });
@@ -113,6 +185,12 @@ describe('db', function() {
       });
 
       it('should add user to room', function() {
+        return db.room.update.addUser(roomId, userId).then(function() {
+          return should(db.room.getUsers(roomId)).to.eventually.have.length(1);
+        });
+      });
+
+      it('should return room if user already added', function() {
         return db.room.update.addUser(roomId, userId).then(function() {
           return should(db.room.getUsers(roomId)).to.eventually.have.length(1);
         });
@@ -168,50 +246,12 @@ describe('db', function() {
         });
       });
 
-      it('should return False if user not exist in room', function() {
-        return should(db.room.update.removeUser(roomId, 42)).to.eventually.be.false;
+      it('should be rejected if user not exist in room', function() {
+        return should(db.room.update.removeUser(roomId, 42)).to.be.rejected;
       });
 
       it('should be rejected if room doesnt exist', function() {
         return should(db.room.update.removeUser(2, userId)).to.be.rejected;
-      });
-
-    });
-
-
-    describe('getUsers()', function() {
-      var userId = 1;
-      var roomId = 1;
-
-      before(function(done) {
-        db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
-          return user._id;
-        }).then(function(user) {
-          db.room.create({projectname: 'test'}, user).then(function(room) {
-            roomId = room.docName;
-          }).then(function() {
-            db.user.localReg('vasya2@test.ru', 'pass').then(function(user) {
-              userId = user._id;
-            }).then(function() {
-              done();
-            });
-          });
-        });
-      });
-
-      after(function(done) {
-        connection.db.dropDatabase();
-        done();
-      });
-
-      it('should return users from room', function() {
-        return db.room.update.addUser(roomId, userId).then(function() {
-          return should(db.room.getUsers(roomId)).to.eventually.deep.property('[0].userId', userId.toString());
-        });
-      });
-
-      it('should be rejected if room doesnt exist', function() {
-        return should(db.room.getUsers(2)).to.be.rejected;
       });
 
     });
@@ -256,9 +296,98 @@ describe('db', function() {
         return should(db.room.user.setCursor(2, userId, cursor)).to.be.rejected;
       });
 
+      it('should be rejected if user doesnt exist', function() {
+        return should(db.room.user.setCursor(roomId, 1, cursor)).to.be.rejected;
+      });
+
+      it('should be rejected if position is not valid', function() {
+        return should(db.room.user.setCursor(roomId, userId, {r:1})).to.be.rejected;
+      });
+
     });
 
-    describe('user.localAuth()', function() {
+    describe('user.get()', function() {
+      var userId = 1;
+      var roomId = 1;
+      var userEmail = 'vasya2@test.ru';
+
+      before(function(done) {
+        db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
+          return user._id;
+        }).then(function(user) {
+          db.room.create({projectname: 'test'}, user).then(function(room) {
+            roomId = room.docName;
+          }).then(function() {
+            db.user.localReg(userEmail, 'pass').then(function(user) {
+              userId = user._id;
+            }).then(function() {
+              db.room.update.addUser(roomId, userId).then(function() {
+                done();
+              });
+            });
+          });
+        });
+      });
+
+      after(function(done) {
+        connection.db.dropDatabase();
+        done();
+      });
+
+      it('should return user', function() {
+        return should(db.room.user.get(roomId, userId)).to.eventually.deep.property('userName', userEmail.toString());
+      });
+
+      it('should be rejected if room doesnt exist', function() {
+        return should(db.room.user.get(2, userId)).to.be.rejected;
+      });
+
+      it('should be rejected if such user not found', function() {
+        return should(db.room.user.get(roomId, 1)).to.be.rejected;
+      });
+
+    });
+
+  });
+
+  describe('user', function() {
+
+    describe('localReg()', function() {
+      var userId = 1;
+      var userName = 'vasya';
+      var userEmail = 'vasya@test.ru';
+
+      before(function(done) {
+        db.user.localReg(userEmail, 'pass').then(function(user) {
+          userId = user._id;
+          done();
+        });
+      });
+
+      after(function(done) {
+        connection.db.dropDatabase();
+        done();
+      });
+
+      it('should return user', function() {
+        return should(db.user.localReg('petya@test.ru', '12345')).to.eventually.an.instanceof(User);
+      });
+
+      it('should be rejected if email already in use', function() {
+        return should(db.user.localReg(userEmail, '123')).to.be.rejected;
+      });
+
+      it('should be rejected if email is invalid', function() {
+        return should(db.user.localReg('vasya@', '123')).to.be.rejected;
+      });
+
+      it('should be rejected if password is invalid', function() {
+        return should(db.user.localReg('vasya@', '')).to.be.rejected;
+      });
+
+    });
+
+    describe('localAuth()', function() {
       var userId = 1;
       var userName = 'vasya';
       var userEmail = 'vasya@test.ru';
@@ -281,16 +410,16 @@ describe('db', function() {
         return should(db.user.localAuth(userEmail, userPass)).to.eventually.deep.property('email', userEmail.toString());
       });
 
-      it('should return False if user not exist', function() {
-        return should(db.user.localAuth('petya@test.ru', userPass)).to.eventually.be.false;
+      it('should be rejected if user not exist', function() {
+        return should(db.user.localAuth('petya@test.ru', userPass)).to.be.rejected;
       });
 
-      it('should return False if password does not match', function() {
-        return should(db.user.localAuth(userName, '12345')).to.eventually.be.false;
+      it('should be rejected if password does not match', function() {
+        return should(db.user.localAuth(userName, '12345')).to.be.rejected;
       });
     });
 
-    describe('user.getUserById()', function() {
+    describe('getUserById()', function() {
       var userId = 1;
       var userName = 'vasya';
       var userEmail = 'vasya@test.ru';

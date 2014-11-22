@@ -52,7 +52,7 @@ module.exports = function(app) {
   });
 
   app.get('/remove/:id', ensureAuthenticated, function(req, res) {
-    db.room.remove(req.params.id, req.user._id).then(function(room) {
+    db.room.remove(req.params.id, req.user._id).then(function() {
       req.session.success = 'Room is deleted';
       res.redirect('/projects');
     }, function() {
@@ -61,7 +61,7 @@ module.exports = function(app) {
   });
 
   app.get('/:id', function(req, res) {
-    db.room.get(req.params.id).then(function(room) {
+    db.room.get(req.params.id).then(function() {
       var name = '';
       var gravatar = '';
       if (req.user) {

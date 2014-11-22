@@ -1,3 +1,4 @@
+/*jshint -W079 */
 'use strict';
 
 var mongoose = require('mongoose');
@@ -83,15 +84,17 @@ RoomSchema.methods = {
           user: userId,
           userColor: room.getColor()
         });
+        room.save(function(err, room) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(room);
+          }
+        });
+      } else {
+        resolve(room);
       }
 
-      room.save(function(err, room) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(room);
-        }
-      });
     });
   },
 
@@ -99,20 +102,27 @@ RoomSchema.methods = {
     var room = this;
 
     return new Promise(function(resolve, reject) {
+      var foundUser = false;
+
       room.users.some(function(user, pos) {
         if (user.user.toString() === userId.toString()) {
           room.restoreColor(user.userColor);
           room.users.splice(pos, 1);
+          foundUser = true;
         }
       });
 
-      room.save(function(err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(true);
-        }
-      });
+      if (!foundUser) {
+        reject(new Error('removeUser(userId): User not exist in room'));
+      } else {
+        room.save(function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(true);
+          }
+        });
+      }
     });
   },
 
@@ -120,19 +130,29 @@ RoomSchema.methods = {
     var room = this;
 
     return new Promise(function(resolve, reject) {
-      room.users.some(function(user, pos) {
+      if (!position || !position.collumn || !position.row) {
+        reject(new Error('userSetCursor(userId, position): Position is not valid'));
+      }
+      var foundUser = false;
+
+      room.users.some(function(user) {
         if (user.user.toString() === userId.toString()) {
           user.userCursor = position;
+          foundUser = true;
         }
       });
 
-      room.save(function(err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(true);
-        }
-      });
+      if (!foundUser) {
+        reject(new Error('userSetCursor(userId, position): User not exist in room'));
+      } else {
+        room.save(function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(true);
+          }
+        });
+      }
     });
   },
 
@@ -215,7 +235,7 @@ RoomSchema.statics = {
           } else if (foundRoom) {
             resolve(foundRoom);
           } else {
-            reject(new Error('Room does not exist'));
+            reject(new Error('getRoomWithCreator(docName, creator): Rooms with creator does not exist'));
           }
         });
     });
@@ -230,12 +250,14 @@ RoomSchema.statics = {
         .exec(function(err, foundUsers) {
           if (err) {
             reject(err);
-          } else {
+          } else if (foundUsers) {
             var resUsers = [];
             foundUsers.users.some(function(user) {
               resUsers.push(transformUser(user));
             });
             resolve(resUsers);
+          } else {
+            reject(new Error('getUsers(docName): Room doesnt exist'));
           }
         });
     });
@@ -250,7 +272,7 @@ RoomSchema.statics = {
         .exec(function(err, foundUsers) {
           if (err) {
             reject(err);
-          } else {
+          } else if (foundUsers) {
             var foundUser;
             foundUsers.users.some(function(user) {
               if (user.user._id.toString() === userId.toString()) {
@@ -261,8 +283,10 @@ RoomSchema.statics = {
             if (foundUser) {
               resolve(foundUser);
             } else {
-              reject(new Error('getUser(): such user not found'));
+              reject(new Error('getUser(docName, userId): Such user not found'));
             }
+          } else {
+            reject(new Error('getUser(docName, userId): Room doesnt exist'));
           }
         });
     });

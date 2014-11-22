@@ -4,7 +4,7 @@ var $ = require('jquery');
 var socket = require('../../js/socket');
 
 $('.chat__input').keypress(function(e) {
-  if (e.keyCode == 13) {
+  if (e.keyCode === 13) {
     e.preventDefault();
 
     if ($(this).val() !== ' ') {
@@ -21,7 +21,8 @@ function onNewMessage(data) {
   messages.append(
     $('<div class="chat__message">')
       .append(
-        $('<img class="message__avatar">').css('backgroundColor', data.user.userColor).attr('src', 'http://www.gravatar.com/avatar/' + data.user.userGravatar + '?s=30&d=blank')
+        $('<img class="message__avatar">').css('backgroundColor', data.user.userColor)
+          .attr('src', 'http://www.gravatar.com/avatar/' + data.user.userGravatar + '?s=30&d=blank')
       )
       .append(
         $('<span class="message__message">').text(data.message)

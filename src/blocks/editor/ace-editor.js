@@ -20,7 +20,6 @@ module.exports = function(a) {
     editor.setTheme('ace/theme/solarized_dark');
   }
 
-  // editor.setTheme('ace/theme/solarized_dark');
   editor.getSession().setMode('ace/mode/javascript');
   editor.setReadOnly(true);
 

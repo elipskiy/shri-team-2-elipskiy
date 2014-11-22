@@ -1,3 +1,4 @@
+/*jshint -W079 */
 'use strict';
 
 var mongoose = require('mongoose');
@@ -88,13 +89,13 @@ UserSchema.methods = {
     var user = this;
 
     return new Promise(function(resolve, reject) {
-      user.rooms.some(function(room, pos) {
+      user.rooms.some(function(room) {
         if (room.room.docName === docName) {
           resolve(room.room);
         }
       });
 
-      reject(new Error('Room does not exist'));
+      reject(new Error('getRoomById(docName): Room does not exist'));
     });
   }
 };
@@ -118,7 +119,7 @@ UserSchema.statics = {
             user.rooms = cleanDeletedRooms(user.rooms);
             resolve(user);
           } else {
-            reject('User does not exist');
+            reject(new Error('findUserById(userId): User does not exist'));
           }
         });
     });
@@ -142,7 +143,7 @@ UserSchema.statics = {
             user.rooms = cleanDeletedRooms(user.rooms);
             resolve(user);
           } else {
-            reject('User does not exist');
+            reject(new Error('findUserByName(userName): User does not exist'));
           }
         });
     });
@@ -166,7 +167,7 @@ UserSchema.statics = {
             user.rooms = cleanDeletedRooms(user.rooms);
             resolve(user);
           } else {
-            reject('User does not exist');
+            reject(new Error('findUserByEmail(userEmail): User does not exist'));
           }
         });
     });
@@ -181,7 +182,7 @@ UserSchema.statics = {
           if (err) {
             reject(err);
           } else if (foundUser) {
-            reject('Email already in use');
+            reject(new Error('Email already in use'));
           } else {
             resolve(true);
           }
@@ -214,7 +215,6 @@ UserSchema.path('email').validate(function(email) {
   return emailRegex.test(email);
 }, 'The specified email is invalid.');
 
-
 var cleanDeletedRooms = function(rooms) {
   return rooms.filter(function(room) {
     if (room.room && room.room._id) {
@@ -223,7 +223,7 @@ var cleanDeletedRooms = function(rooms) {
       return false;
     }
   });
-}
+};
 
 var UserModel = mongoose.model('User', UserSchema);
 

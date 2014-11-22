@@ -7,7 +7,11 @@ $('.statusbar__change-theme').on('click', function() {
 
   if ($('body').hasClass('theme_dark')) {
     localStorage.MeppoTheme = 'dark';
+
+    $('.ace_editor').removeClass('ace-solarized-light').addClass('ace-solarized-dark ace_dark');
   } else {
     localStorage.MeppoTheme = 'light';
+
+    $('.ace_editor').removeClass('ace-solarized-dark ace_dark').addClass('ace-solarized-light');
   }
 });
