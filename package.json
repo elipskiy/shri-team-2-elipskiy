@@ -6,8 +6,8 @@
   "scripts": {
     "lint": "gulp lint",
     "test": "node ./node_modules/mocha/bin/mocha",
-    "start": "gulp",
-    "start-dev": "mongod --syslog & DEBUG=true gulp",
+    "start": "gulp & node server/index.js",
+    "dev": "mongod --syslog & DEBUG=true gulp",
     "coverage": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec -t 5000",
     "analysis": "gulp plato",
     "report": "npm run analysis | npm run coverage"
@@ -75,7 +75,9 @@
     "socket.io": "~1.1.0",
     "socket.io-client": "~1.1.0",
     "vinyl-source-stream": "^1.0.0",
-    "watchify": "^2.0.0"
+    "watchify": "^2.0.0",
+    "passport-github": "^0.1.5",
+    "connect-mongo": "^0.4.1"
   },
   "settings": {
     "debug": true

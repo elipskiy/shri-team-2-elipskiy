@@ -15,6 +15,15 @@ module.exports = function(app) {
     })
   );
 
+  // app.get('/auth/github', passport.authenticate('github'), function(req, res){});
+  app.get('/auth/github', passport.authenticate('github'));
+
+  app.get('/auth/github/callback', passport.authenticate('github', {
+    failureRedirect: '/'
+  }), function(req, res) {
+    res.redirect('/projects');
+  });
+
   app.get('/signup', function(req, res) {
     res.render('signup');
   });
@@ -32,6 +41,13 @@ module.exports = function(app) {
   });
 
   app.get('/projects', ensureAuthenticated, function(req, res) {
+    console.log(req.user);
+    // if (req.user.provider) {
+    //   if (req.user.provider === 'github') {
+
+    //   }
+    // }
+
     var email = req.user.email;
     var gravatar = req.user.gravatarHash;
 

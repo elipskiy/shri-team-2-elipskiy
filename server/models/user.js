@@ -13,18 +13,21 @@ var UserSchema = new Schema({
     required: true,
     unique: true
   },
+  avatar: {
+    type: String
+  },
   gravatarHash: {
     type: String
   },
-  firstName: {
-    type: String
-  },
-  lastName: {
+  name: {
     type: String
   },
   hashedPassword: {
     type: String,
-    required: true
+    // required: true
+  },
+  provider: {
+    type: String
   },
   salt: {
     type: String,
@@ -188,6 +191,31 @@ UserSchema.statics = {
           }
         });
     });
+  },
+
+  findUserByProviderEmail: function(provider, userEmail) {
+    var user = this;
+
+    return new Promise(function(resolve, reject) {
+      user.findOne({provider: provider, email: userEmail})
+        .populate({
+          path: 'rooms.room',
+          match: {deleted: false},
+          select: 'name description docName readOnly createdAt',
+          options: {sort: '-createdAt', lean: true}
+        })
+        .exec(function(err, user) {
+          if (err) {
+            reject(err);
+          } else if (user) {
+            user.rooms = cleanDeletedRooms(user.rooms);
+            resolve(user);
+          } else {
+            resolve();
+            // reject(new Error('findUserByProviderEmail(provider, userEmail): User does not exist'));
+          }
+        });
+    });
   }
 };
 
@@ -203,11 +231,6 @@ UserSchema.virtual('password')
   .set(function(password) {
     this.salt = crypto.randomBytes(32).toString('base64');
     this.hashedPassword = this.encryptPassword(password);
-  });
-
-UserSchema.virtual('fullname')
-  .get(function() {
-    return this.firstName + ' ' + this.lastName;
   });
 
 UserSchema.path('email').validate(function(email) {

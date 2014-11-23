@@ -131,7 +131,9 @@ RoomSchema.methods = {
 
     return new Promise(function(resolve, reject) {
       if (!position || !position.column || !position.row) {
-        reject(new Error('userSetCursor(userId, position): Position is not valid'));
+        if (typeof(position.column) !== 'number' || typeof(position.row) !== 'number') {
+          reject(new Error('userSetCursor(userId, position): Position is not valid'));
+        }
       }
       var foundUser = false;
 

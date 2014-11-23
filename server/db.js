@@ -157,6 +157,38 @@ function getUserById(userId) {
   });
 }
 
+function providerAuthReg(provider, profile) {
+  console.log('providerAuthReg(): ', profile);
+  return new Promise(function(resolve, reject) {
+    UserModel.findUserByProviderEmail(provider, profile.email).then(function(user) {
+      if (user) {
+        resolve(user);
+      } else {
+        UserModel.checkFreeEmail(profile.email).then(function() {
+          var user = new UserModel({
+            provider: provider,
+            name: profile.name,
+            email: profile.email,
+            avatar: profile.avatar_url,
+            gravatarHash: profile.gravatar_id
+          });
+          user.save(function(err, user) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(user);
+            }
+          });
+        }, function(err) {
+          reject(err);
+        });
+      }
+    }).catch(function(err) {
+      reject(err);
+    });
+  });
+}
+
 module.exports = {
   room: {
     create: createRoom,
@@ -175,6 +207,7 @@ module.exports = {
   user: {
     localReg: userLocalRegister,
     localAuth: userLocalAuth,
-    getById: getUserById
+    getById: getUserById,
+    providerAuthReg: providerAuthReg
   }
 };

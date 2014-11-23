@@ -27,19 +27,13 @@ App development depends on npm, the Node package manager, which is distributed w
 
 4. Install [mongodb](http://www.mongodb.org/downloads)
 
-5. Run default gulp task:
-
-   ```
-   npm start
-   ```
-
 ## Running
 
 Run server:
 
 ```
 mongod
-node server/index.js
+npm start
 ```
 
 The app should start on [http://localhost:3000/](http://localhost:3000/)
@@ -47,7 +41,7 @@ The app should start on [http://localhost:3000/](http://localhost:3000/)
 Run server in debug mode
 
 ```
-npm run start-dev
+npm run dev
 ```
 
 The app should start on [http://localhost:3000/](http://localhost:3000/)
