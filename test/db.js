@@ -259,7 +259,7 @@ describe('db', function() {
     describe('user.setCursor()', function() {
       var userId = 1;
       var roomId = 1;
-      var cursor = {row: 1, collumn: 1};
+      var cursor = {row: 1, column: 1};
 
       before(function(done) {
         db.user.localReg('vasya@test.ru', 'pass').then(function(user) {
@@ -288,7 +288,7 @@ describe('db', function() {
         return db.room.user.setCursor(roomId, userId, cursor).then(function() {
           return should(db.room.user.get(roomId, userId)).to.eventually.deep.property('userCursor.row', cursor.row);
         }).then(function() {
-          return should(db.room.user.get(roomId, userId)).to.eventually.deep.property('userCursor.collumn', cursor.collumn);
+          return should(db.room.user.get(roomId, userId)).to.eventually.deep.property('userCursor.column', cursor.column);
         });
       });
 

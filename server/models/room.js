@@ -38,7 +38,7 @@ var RoomSchema = new Schema({
     },
     userCursor: {
       type: Schema.Types.Mixed,
-      default: {row: 0, collumn: 0}
+      default: {row: 0, column: 0}
     },
     userColor: {
       type: String,
@@ -130,7 +130,7 @@ RoomSchema.methods = {
     var room = this;
 
     return new Promise(function(resolve, reject) {
-      if (!position || !position.collumn || !position.row) {
+      if (!position || !position.column || !position.row) {
         reject(new Error('userSetCursor(userId, position): Position is not valid'));
       }
       var foundUser = false;

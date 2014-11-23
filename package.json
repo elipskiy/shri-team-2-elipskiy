@@ -7,6 +7,7 @@
     "lint": "gulp lint",
     "test": "node ./node_modules/mocha/bin/mocha",
     "start": "gulp",
+    "start-dev": "mongod --syslog & DEBUG=true gulp",
     "coverage": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec -t 5000",
     "analysis": "gulp plato",
     "report": "npm run analysis | npm run coverage"
