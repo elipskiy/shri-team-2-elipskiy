@@ -6,7 +6,7 @@ html(lang='en')
     link(rel='stylesheet', href='css/signup.css')
   body.theme_dark
     +head(false, true)
-    +form('/local-reg', 'Sign up')
+    +form('/local-register', 'Sign up')
       .form__input
         if (error)
           p.form__error #{error}

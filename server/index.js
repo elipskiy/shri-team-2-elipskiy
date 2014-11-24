@@ -7,7 +7,8 @@ var MongoStore   = require('connect-mongo')(session);
 
 var config = require('./config/config');
 var sessionStore = new MongoStore({
-  db: 'meepo'
+  db: 'meepo',
+  auto_reconnect: true
 });
 var sessionMiddleware = session({
   secret: 'meepo',
@@ -19,9 +20,12 @@ var sessionMiddleware = session({
 require('./config/db')(config);
 require('./config/express')(app, sessionMiddleware, config);
 require('./config/sharejs')(app);
-require('./config/passport')(app);
+require('./config/passport')(app, config);
 
-require('./routes')(app);
+require('./routes/')(app);
+app.use(function(req, res) {
+  res.redirect('/projects'); // 404
+});
 
 var server = app.listen(config.port, function() {
   var host = server.address().address;

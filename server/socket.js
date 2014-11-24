@@ -2,26 +2,31 @@
 
 var db = require('./db.js');
 
+function checkSession(socket) {
+  if (socket.request.session.passport) {
+    if (socket.request.session.passport.user) {
+      socket.userId = socket.request.session.passport.user._id;
+      socket.readonly = false;
+    } else {
+      socket.readonly = true;
+    }
+  } else {
+    socket.readonly = true;
+  }
+
+  socket.emit('connectedUserReadonly', {readonly: socket.readonly});
+}
+
 module.exports = function(io) {
 
   io.on('connection', function(socket) {
 
-    if (socket.request.session.passport) {
-      if (socket.request.session.passport.user) {
-        socket.userId = socket.request.session.passport.user._id;
-        socket.readonly = false;
-      } else {
-        socket.readonly = true;
-      }
-    } else {
-      socket.readonly = true;
-    }
+    checkSession(socket);
 
     socket.on('connectToRoom', function(roomId) {
       socket.roomId = roomId;
       socket.join(roomId);
       socket.emit('connectedUserId', {id: socket.userId});
-      socket.emit('connectedUserReadonly', {readonly: socket.readonly});
       db.room.getUsers(roomId).then(function(users) {
         io.to(roomId).emit('usersUpdate', users);
       });
@@ -63,6 +68,7 @@ module.exports = function(io) {
     });
 
     socket.on('userCursorPosition', function(position) {
+      checkSession(socket);
       if (socket.readonly) {
         return;
       }

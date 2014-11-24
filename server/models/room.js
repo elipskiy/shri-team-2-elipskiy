@@ -213,7 +213,7 @@ RoomSchema.statics = {
     var room = this;
 
     return new Promise(function(resolve, reject) {
-      room.findOne({docName: docName})
+      room.findOne({docName: docName, deleted: false})
         .exec(function(err, foundRoom) {
           if (err) {
             reject(err);
@@ -230,7 +230,7 @@ RoomSchema.statics = {
     var room = this;
 
     return new Promise(function(resolve, reject) {
-      room.findOne({docName: docName, creator: creator})
+      room.findOne({docName: docName, creator: creator, deleted: false})
         .exec(function(err, foundRoom) {
           if (err) {
             reject(err);

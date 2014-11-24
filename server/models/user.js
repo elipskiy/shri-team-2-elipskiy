@@ -24,7 +24,7 @@ var UserSchema = new Schema({
   },
   hashedPassword: {
     type: String,
-    // required: true
+    required: true
   },
   provider: {
     type: String

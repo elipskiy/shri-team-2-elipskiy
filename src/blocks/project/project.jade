@@ -1,7 +1,7 @@
 mixin newProject
   .newproject__form
     h1 Create new project
-    form(action='/new-project', method="post")
+    form(action='/create', method="post")
       div.form__input
         p.form__error #{error}
         input(type='text', name='projectname', placeholder='Project Name')
