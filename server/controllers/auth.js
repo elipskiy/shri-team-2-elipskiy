@@ -1,10 +1,10 @@
 'use strict';
 
-var db = require('../db.js');
+var dbUser = require('../db/user');
 
 exports.authenticate = {
   local: function(req, email, password, done) {
-    db.user.localAuth(email, password).then(function(user) {
+    dbUser.localAuth(email, password).then(function(user) {
       if (user) {
         req.session.success = 'You are successfully logged in ' + user + '!';
         done(null, user);
@@ -20,7 +20,7 @@ exports.authenticate = {
 };
 
 exports.register = function(req, email, password, done) {
-  db.user.localAuth(email, password).then(function(user) {
+  dbUser.localAuth(email, password).then(function(user) {
     if (user) {
       req.session.success = 'You are successfully logged in ' + user + '!';
       done(null, user);

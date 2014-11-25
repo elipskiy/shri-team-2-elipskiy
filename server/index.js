@@ -3,7 +3,7 @@
 var express = require('express');
 var app = express();
 var session = require('express-session');
-var MongoStore   = require('connect-mongo')(session);
+var MongoStore = require('connect-mongo')(session);
 
 var config = require('./config/config');
 var sessionStore = new MongoStore({

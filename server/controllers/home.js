@@ -1,9 +1,9 @@
 'use strict';
 
-var db = require('../db.js');
+var dbRoom = require('../db/room');
 
 exports.show = function(req, res, next) {
-  db.room.get(req.params.id).then(function() {
+  dbRoom.get(req.params.id).then(function() {
     var name = '';
     var gravatar = '';
     if (req.user) {

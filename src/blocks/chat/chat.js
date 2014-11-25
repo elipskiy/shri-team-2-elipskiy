@@ -7,7 +7,7 @@ $('.chat__input').keypress(function(e) {
   if (e.keyCode === 13) {
     e.preventDefault();
 
-    if ($(this).val() !== ' ') {
+    if ($(this).val() && $(this).val() !== ' ') {
       socket.emit('userChatMessage', $(this).val());
     }
 
