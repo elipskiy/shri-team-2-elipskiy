@@ -112,7 +112,7 @@ UserSchema.statics = {
         .populate({
           path: 'rooms.room',
           match: {deleted: false},
-          select: 'name description docName readOnly createdAt',
+          select: 'name description docName lang readOnly createdAt',
           options: {sort: '-createdAt', lean: true}
         })
         .exec(function(err, user) {
@@ -136,7 +136,7 @@ UserSchema.statics = {
         .populate({
           path: 'rooms.room',
           match: {deleted: false},
-          select: 'name description docName readOnly createdAt',
+          select: 'name description docName lang readOnly createdAt',
           options: {sort: '-createdAt', lean: true}
         })
         .exec(function(err, user) {
@@ -160,7 +160,7 @@ UserSchema.statics = {
         .populate({
           path: 'rooms.room',
           match: {deleted: false},
-          select: 'name description docName readOnly createdAt',
+          select: 'name description docName lang readOnly createdAt',
           options: {sort: '-createdAt', lean: true}
         })
         .exec(function(err, user) {
@@ -201,7 +201,7 @@ UserSchema.statics = {
         .populate({
           path: 'rooms.room',
           match: {deleted: false},
-          select: 'name description docName readOnly createdAt',
+          select: 'name description docName lang readOnly createdAt',
           options: {sort: '-createdAt', lean: true}
         })
         .exec(function(err, user) {
@@ -212,7 +212,6 @@ UserSchema.statics = {
             resolve(user);
           } else {
             resolve();
-            // reject(new Error('findUserByProviderEmail(provider, userEmail): User does not exist'));
           }
         });
     });

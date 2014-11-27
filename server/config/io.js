@@ -10,5 +10,5 @@ module.exports = function(server, sessionMiddleware) {
     sessionMiddleware(socket.request, {}, next);
   });
 
-  require('../socket')(io);
+  require('../io/socket')(io);
 };

@@ -61,8 +61,14 @@
   line-height: 20px;
 }
 
-.projects__list_remove {
+.projects__list_remove,
+.projects__list_restore {
   display: inline;
+  float: right;
+}
+
+.projects__list_lang {
+  line-height: 21px;
   float: right;
 }
 

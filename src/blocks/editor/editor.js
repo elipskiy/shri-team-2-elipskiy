@@ -17,11 +17,14 @@ module.exports = function(editorName) {
   socket.on('markerUpdate', editor.updateCursorMarker);
   socket.on('markerRemove', editor.removeMarker);
   socket.on('connectedUserReadonly', editor.editorChangeReadonly);
+  socket.on('changeLang', updateLanguage);
 
   var sbPosition;
+  var sbEditor;
 
   function init() {
     sbPosition = $('#statusbar__position');
+    sbEditor = $('#statusbar__editor_lang');
     var docName = document.location.pathname.slice(1);
     openDocument(docName);
   }
@@ -34,7 +37,7 @@ module.exports = function(editorName) {
       }
 
       if (doc.created) {
-        doc.insert(0, '(function() {\n  console.log(\'Hello, wolrd!\');\n  //Share your link! (' +
+        doc.insert(0, '(function() {\n  console.log(\'Hello, wolrd!\');\n  // Share your link! (' +
           document.location.href + ')\n})();\n');
       }
       editor.attachToDocument(doc);
@@ -46,6 +49,20 @@ module.exports = function(editorName) {
      ', Column: ' + (cursorPosition.column + 1).toString());
     socket.emit('userCursorPosition', cursorPosition);
   }
+
+  function updateLanguage(data) {
+    sbEditor.text(data.lang);
+    editor.changeMode(data.lang);
+  }
+
+  $('.lang_menu__lang_change').on('click', function() {
+    var lang = $(this).data('label');
+
+    updateLanguage({lang: lang});
+
+    socket.emit('roomChangeLang', lang);
+    $('.dropdown__lang_menu').hide();
+  });
 
   return {
     init: init

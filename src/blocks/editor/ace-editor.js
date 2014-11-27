@@ -6,6 +6,16 @@ module.exports = function(a) {
   var ace = require('brace');
   var Range = ace.acequire('ace/range').Range;
   require('brace/mode/javascript');
+  require('brace/mode/coffee');
+  require('brace/mode/css');
+  require('brace/mode/less');
+  require('brace/mode/html');
+  require('brace/mode/pascal');
+  require('brace/mode/python');
+  require('brace/mode/ruby');
+  require('brace/mode/php');
+  require('brace/mode/markdown');
+  require('brace/mode/plain_text');
   require('brace/theme/solarized_dark');
   require('brace/theme/solarized_light');
   require('../../js/share/share');
@@ -86,10 +96,15 @@ module.exports = function(a) {
     }
   }
 
+  function changeMode(lang) {
+    editor.getSession().setMode('ace/mode/' + lang);
+  }
+
   return {
     attachToDocument: attachToDocument,
     updateCursorMarker: updateCursorMarker,
     removeMarker: removeMarker,
-    editorChangeReadonly: editorChangeReadonly
+    editorChangeReadonly: editorChangeReadonly,
+    changeMode: changeMode
   };
 };

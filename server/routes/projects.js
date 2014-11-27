@@ -17,7 +17,8 @@ router
   .get('/', ensureAuthenticated, projects.projects)
 
   .post('/create', ensureAuthenticated, projects.create)
-  .get('/remove/:id', ensureAuthenticated, projects.remove);
+  .get('/remove/:id', ensureAuthenticated, projects.remove)
+  .get('/restore/:id', ensureAuthenticated, projects.restore);
 
 module.exports = {
   use: '/projects',

@@ -3,7 +3,7 @@
 var dbRoom = require('../db/room');
 
 exports.show = function(req, res, next) {
-  dbRoom.get(req.params.id).then(function() {
+  dbRoom.get(req.params.id).then(function(room) {
     var name = '';
     var gravatar = '';
     if (req.user) {
@@ -12,7 +12,8 @@ exports.show = function(req, res, next) {
     }
     res.render('index', {
       user: name,
-      gravatar: gravatar
+      gravatar: gravatar,
+      lang: room.lang
     });
   }, function() {
     next();

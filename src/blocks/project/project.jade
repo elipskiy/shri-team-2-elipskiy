@@ -1,7 +1,7 @@
 mixin newProject
   .newproject__form
     h1 Create new project
-    form(action='/create', method="post")
+    form(action='/projects/create', method="post")
       div.form__input
         p.form__error #{error}
         input(type='text', name='projectname', placeholder='Project Name')
@@ -13,9 +13,14 @@ mixin newProject
 mixin myProject
   h1 My Projects
   ul.projects__list
+    if (success && success.removed)
+      li
+        span.projects__list_name The project is removed.
+        a.projects__list_restore(href='/projects/restore/' + success.docName) restore
     each val, index in projects
       li
         a.projects__list_name(href=val.room.docName)= val.room.name
-        a.projects__list_remove(href='/remove/' + val.room.docName)
+        a.projects__list_remove(href='/projects/remove/' + val.room.docName)
           .icon
+        span.projects__list_lang #{val.room.lang}
         p.projects__list_description= val.room.description

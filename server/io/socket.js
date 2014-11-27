@@ -1,6 +1,6 @@
 'use strict';
 
-var dbRoom = require('./db/room');
+var dbRoom = require('../db/room');
 
 function checkSession(socket) {
   if (socket.request.session.passport) {
@@ -95,6 +95,20 @@ module.exports = function(io) {
 
       dbRoom.user.get(roomId, userId).then(function(user) {
         io.to(roomId).emit('userChatMessage', {user: user, message: message});
+      });
+    });
+
+    socket.on('roomChangeLang', function(lang) {
+      if (socket.readonly) {
+        return;
+      }
+
+      var roomId = socket.roomId;
+
+      dbRoom.update.lang(roomId, lang).then(function() {
+        io.to(roomId).emit('changeLang', {lang: lang});
+      }).catch(function(error) {
+        console.log('roomChangeLang: ', error);
       });
     });
   });

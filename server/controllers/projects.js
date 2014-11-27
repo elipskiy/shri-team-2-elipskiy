@@ -24,7 +24,19 @@ exports.create = function(req, res) {
 
 exports.remove = function(req, res) {
   dbRoom.remove(req.params.id, req.user._id).then(function() {
-    req.session.success = 'Room is deleted';
+    req.session.success = {
+      removed: true,
+      docName: req.params.id
+    };
+    res.redirect('/projects');
+  }, function(err) {
+    req.session.error = err;
+    res.redirect('/projects');
+  });
+};
+
+exports.restore = function(req, res) {
+  dbRoom.restore(req.params.id, req.user._id).then(function() {
     res.redirect('/projects');
   }, function(err) {
     req.session.error = err;

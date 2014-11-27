@@ -2,7 +2,7 @@
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var GitHubStrategy = require('passport-github').Strategy;
+// var GitHubStrategy = require('passport-github').Strategy;
 var auth = require('../controllers/auth');
 
 module.exports = function(app, config) {

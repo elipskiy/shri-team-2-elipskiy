@@ -1,0 +1,25 @@
+.dropdown__lang_menu {
+  position: absolute;
+  z-index: 99;
+  right: 0;
+  bottom: 100%;
+
+  display: none;
+
+  padding: 15px;
+
+  background-color: rgba(250, 231, 179, .56);
+}
+
+.theme_dark .dropdown__lang_menu {
+  background-color: rgba(0, 30, 37, .64);
+}
+
+.dropdown__lang_menu ul {
+  float: left;
+
+  margin: 8px;
+  padding: 0;
+
+  list-style: none;
+}

@@ -31,6 +31,10 @@ var RoomSchema = new Schema({
     type: Boolean,
     default: false
   },
+  lang: {
+    type: String,
+    default: 'javascript'
+  },
   users: [{
     user: {
       type: Schema.ObjectId,
@@ -205,6 +209,21 @@ RoomSchema.methods = {
         }
       });
     });
+  },
+
+  setLang: function(lang) {
+    var room = this;
+
+    return new Promise(function(resolve, reject) {
+      room.lang = lang;
+      room.save(function(err, room) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(room);
+        }
+      });
+    });
   }
 };
 
@@ -230,7 +249,7 @@ RoomSchema.statics = {
     var room = this;
 
     return new Promise(function(resolve, reject) {
-      room.findOne({docName: docName, creator: creator, deleted: false})
+      room.findOne({docName: docName, creator: creator})
         .exec(function(err, foundRoom) {
           if (err) {
             reject(err);

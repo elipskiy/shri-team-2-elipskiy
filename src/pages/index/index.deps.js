@@ -28,5 +28,8 @@ module.exports.require = [
   },
   {
     block: 'setting'
+  },
+  {
+    block: 'dropdown'
   }
 ];

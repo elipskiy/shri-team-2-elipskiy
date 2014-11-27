@@ -1,4 +1,6 @@
 .statusbar {
+  position: relative;
+
   box-sizing: border-box;
   height: 20px;
   /*margin-top: -20px;*/
@@ -38,4 +40,10 @@
 .theme_dark .statusbar__change-theme {
   border-width: 0;
   /*border-color: #fbeecb;*/
+}
+
+#statusbar__editor_lang {
+  float: right;
+
+  cursor: pointer;
 }

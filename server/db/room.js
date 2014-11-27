@@ -46,6 +46,18 @@ function removeRoom(roomId, creator) {
   });
 }
 
+function restoreRoom(roomId, creator) {
+  return new Promise(function(resolve, reject) {
+    RoomModel.getRoomWithCreator(roomId, creator).then(function(room) {
+      return room.restore();
+    }).then(function() {
+      resolve(true);
+    }).catch(function(err) {
+      reject(err);
+    });
+  });
+}
+
 function getRoom(roomId) {
   return new Promise(function(resolve, reject) {
     RoomModel.getRoom(roomId).then(function(room) {
@@ -90,6 +102,18 @@ function removeUserFromRoom(roomId, userId) {
   });
 }
 
+function setLang(roomId, lang) {
+  return new Promise(function(resolve, reject) {
+    RoomModel.getRoom(roomId).then(function(room) {
+      return room.setLang(lang);
+    }).then(function() {
+      resolve(true);
+    }).catch(function(err) {
+      reject(err);
+    });
+  });
+}
+
 function userUpdateCursorPosition(roomId, userId, cursorPosition) {
   return new Promise(function(resolve, reject) {
     RoomModel.getRoom(roomId).then(function(room) {
@@ -115,11 +139,13 @@ function getUser(roomId, userId) {
 module.exports = {
   create: createRoom,
   remove: removeRoom,
+  restore: restoreRoom,
   get: getRoom,
   getUsers: getUsersFromRoom,
   update: {
     addUser: addUserToRoom,
     removeUser: removeUserFromRoom,
+    lang: setLang
   },
   user: {
     setCursor: userUpdateCursorPosition,
