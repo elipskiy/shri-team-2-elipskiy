@@ -6,6 +6,14 @@ var crypto = require('crypto');
 var Promise = require('es6-promise').Promise;
 
 var Schema = mongoose.Schema;
+var schemaOptions = {
+  toObject: {
+    virtuals: true
+  },
+  toJSON: {
+    virtuals: true
+  }
+};
 
 var UserSchema = new Schema({
   email: {
@@ -43,7 +51,7 @@ var UserSchema = new Schema({
     type: Date,
     default: Date.now
   }
-});
+}, schemaOptions);
 
 UserSchema.pre('save', function(next) {
   if (this.email) {
@@ -65,7 +73,7 @@ UserSchema.methods = {
       if (user.encryptPassword(password) === user.hashedPassword) {
         resolve(user);
       } else {
-        reject('Incorrect password');
+        reject(new Error('Incorrect password'));
       }
     });
   },
@@ -224,6 +232,18 @@ UserSchema.virtual('id')
   })
   .get(function() {
     return this._id;
+  });
+
+UserSchema.virtual('displayName')
+  .set(function(name) {
+    this.name = name;
+  })
+  .get(function() {
+    if (this.name) {
+      return this.name;
+    } else {
+      return this.email;
+    }
   });
 
 UserSchema.virtual('password')

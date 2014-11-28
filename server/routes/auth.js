@@ -19,10 +19,9 @@ router
     res.render('signup');
   })
   .post('/local-register', passport.authenticate('local-register', {
-      successRedirect: '/projects',
-      failureRedirect: '/signup'
-    })
-  )
+    successRedirect: '/projects',
+    failureRedirect: '/signup'
+  }))
 
   .get('/logout', auth.logout);
 

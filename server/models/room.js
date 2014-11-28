@@ -7,6 +7,14 @@ var id = require('../libs/idGenerator');
 var Promise = require('es6-promise').Promise;
 
 var Schema = mongoose.Schema;
+var schemaOptions = {
+  toObject: {
+    virtuals: true
+  },
+  toJSON: {
+    virtuals: true
+  }
+};
 
 var RoomSchema = new Schema({
   creator: {
@@ -60,7 +68,7 @@ var RoomSchema = new Schema({
     type: Date,
     default: Date.now
   }
-});
+}, schemaOptions);
 
 RoomSchema.pre('save', function(next) {
   if (this.isNew) {
@@ -267,7 +275,7 @@ RoomSchema.statics = {
 
     return new Promise(function(resolve, reject) {
       room.findOne({docName: docName})
-        .populate('users.user', 'email gravatarHash')
+        .populate('users.user', 'email displayName name gravatarHash')
         .exec(function(err, foundUsers) {
           if (err) {
             reject(err);
@@ -289,7 +297,7 @@ RoomSchema.statics = {
 
     return new Promise(function(resolve, reject) {
       room.findOne({docName: docName})
-        .populate('users.user', 'email gravatarHash')
+        .populate('users.user', 'email displayName name gravatarHash')
         .exec(function(err, foundUsers) {
           if (err) {
             reject(err);
@@ -314,10 +322,14 @@ RoomSchema.statics = {
   }
 };
 
+RoomSchema.path('name').validate(function(name) {
+  return name.length;
+}, 'Project Name not specified.');
+
 var transformUser = function(user) {
   return {
     userId: user.user._id.toString(),
-    userName: user.user.email,
+    userName: user.user.displayName,
     userGravatar: user.user.gravatarHash,
     userColor: user.userColor,
     userCursor: user.userCursor

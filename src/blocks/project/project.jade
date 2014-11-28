@@ -3,7 +3,8 @@ mixin newProject
     h1 Create new project
     form(action='/projects/create', method="post")
       div.form__input
-        p.form__error #{error}
+        if (error && error.create)
+          p.form__error #{error.create}
         input(type='text', name='projectname', placeholder='Project Name')
       div.form__input
         textarea(name='description', placeholder='Description')
@@ -13,6 +14,10 @@ mixin newProject
 mixin myProject
   h1 My Projects
   ul.projects__list
+    if (error && error.remove)
+      p.form__error #{error.remove}
+    if (error && error.restore)
+      p.form__error #{error.restore}
     if (success && success.removed)
       li
         span.projects__list_name The project is removed.

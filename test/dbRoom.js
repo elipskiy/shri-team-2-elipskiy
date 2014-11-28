@@ -46,7 +46,7 @@ describe('db', function() {
       });
 
       it('should be rejected if room name does not exist', function() {
-        return should(dbRoom.create({})).to.be.rejected;
+        return should(dbRoom.create({projectname: ''})).to.be.rejected;
       });
 
       it('should be rejected if creator not found', function() {

@@ -3,16 +3,18 @@ html(lang='en')
   head
     meta(charset='UTF-8')
     title Meepo
-    link(rel='stylesheet', href='css/projects.css')
-    //- meta(name='viewport', content='ya-title=#00222b,ya-dock=#00222b')
+    link(rel='stylesheet', href='css/profile.css')
   body.theme_dark
     +head
     .splitview
+      .splitview__panel.splitview__panel_project
+        +profile
       if (projects.length)
         .splitview__panel.splitview__panel_project
           +myProject
-      .splitview__panel.splitview__panel_project
-        +newProject
+      else
+        .splitview__panel.splitview__panel_project
+          +newProject
     +statusbar(true)
 
-    script(src='js/projects.js')
+    script(src='js/profile.js')

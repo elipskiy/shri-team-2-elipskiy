@@ -10,12 +10,6 @@ function createRoom(room, creator) {
     var roomName = room.projectname;
     var roomDescrip = room.description;
     var roomReadonly = room.readonly;
-    if (!roomName) {
-      reject(new Error('Project Name not specified'));
-    }
-    if (roomReadonly === 'on') {
-      roomReadonly = true;
-    }
 
     var newRoom = new RoomModel({name: roomName, description: roomDescrip, readOnly: roomReadonly, creator: creator});
     newRoom.save(function(err, room) {

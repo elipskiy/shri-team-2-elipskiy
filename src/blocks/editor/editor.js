@@ -58,10 +58,9 @@ module.exports = function(editorName) {
   $('.lang_menu__lang_change').on('click', function() {
     var lang = $(this).data('label');
 
-    updateLanguage({lang: lang});
-
-    socket.emit('roomChangeLang', lang);
     $('.dropdown__lang_menu').hide();
+    updateLanguage({lang: lang});
+    socket.emit('roomChangeLang', lang);
   });
 
   return {

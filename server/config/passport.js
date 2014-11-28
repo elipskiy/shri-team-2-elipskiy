@@ -4,6 +4,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 // var GitHubStrategy = require('passport-github').Strategy;
 var auth = require('../controllers/auth');
+var dbUser = require('../db/user');
 
 module.exports = function(app, config) {
 
@@ -12,7 +13,9 @@ module.exports = function(app, config) {
   });
 
   passport.deserializeUser(function(obj, done) {
-    done(null, obj);
+    dbUser.getById(obj.id).then(function(user) {
+      done(null, user);
+    });
   });
 
   passport.use('local-auth', new LocalStrategy(

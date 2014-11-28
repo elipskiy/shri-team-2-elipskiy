@@ -7,7 +7,7 @@ exports.show = function(req, res, next) {
     var name = '';
     var gravatar = '';
     if (req.user) {
-      name = req.user.email;
+      name = req.user.displayName;
       gravatar = req.user.gravatarHash;
     }
     res.render('index', {

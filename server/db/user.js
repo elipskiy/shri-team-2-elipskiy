@@ -81,9 +81,64 @@ function providerAuthReg(provider, profile) {
   });
 }
 
+function userUpdatePassword(passwords, userId) {
+  return new Promise(function(resolve, reject) {
+    if (passwords.newPass !== passwords.confirmPass) {
+      reject(new Error('Passwords do not match'));
+    } else if (!passwords.newPass.length) {
+      reject(new Error('Password invalid'));
+    } else {
+      var foundUser;
+      UserModel.findUserById(userId).then(function(user) {
+        foundUser = user;
+        return user.checkPassword(passwords.oldPass);
+      }).then(function() {
+        foundUser.password = passwords.newPass;
+        foundUser.save(function(err, user) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(user);
+          }
+        });
+      }).catch(function(err) {
+        reject(err);
+      });
+    }
+  });
+}
+
+function userUpdateData(data, userId) {
+  return new Promise(function(resolve, reject) {
+    UserModel.findUserById(userId).then(function(user) {
+      user.name = data.displayName;
+      user.email = data.email;
+      user.save(function(err, user) {
+        if (err) {
+          if (err.errors) {
+            if (err.errors.email) {
+              reject(err.errors.email.message);
+            }
+          } else {
+            reject(err);
+          }
+        } else {
+          resolve(user);
+        }
+      });
+    }).catch(function(err) {
+      reject(err);
+    });
+  });
+}
+
 module.exports = {
   localReg: userLocalRegister,
   localAuth: userLocalAuth,
   getById: getUserById,
-  providerAuthReg: providerAuthReg
+  providerAuthReg: providerAuthReg,
+  update: {
+    pass: userUpdatePassword,
+    data: userUpdateData
+  }
 };

@@ -49,24 +49,37 @@
 
 .ace_gutter-cell {
   padding-right: 15px!important;
+  padding-left: 4px!important;
 
   background-image: none!important;
   background-position: 2px center!important;
+}
+
+.ace_gutter-cell:before {
+  display: inline-block;
+  margin-right: 8px;
+
+  width: .64em;
+  height: .64em;
+
+  content: '';
+
+  border-radius: 50%;
 }
 
 .ace_gutter-layer {
   min-width: 50px!important;
 }
 
-.ace_gutter-cell.ace_info {
+.ace_gutter-cell.ace_info:before {
   background: #93a1a1;
 }
 
-.ace_gutter-cell.ace_warning {
+.ace_gutter-cell.ace_warning:before {
   background: #b58900;
 }
 
-.ace_gutter-cell.ace_error {
+.ace_gutter-cell.ace_error:before {
   background: #dc322f;
 }
 
