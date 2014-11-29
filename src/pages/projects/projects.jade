@@ -1,18 +1,13 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset='UTF-8')
-    title Meepo
-    link(rel='stylesheet', href='css/projects.css')
-    //- meta(name='viewport', content='ya-title=#00222b,ya-dock=#00222b')
-  body.theme_dark
-    +head
-    .splitview
-      if (projects.length)
-        .splitview__panel.splitview__panel_project
-          +myProject
-      .splitview__panel.splitview__panel_project
-        +newProject
-    +statusbar(true)
++page('projects')
+  +head
 
-    script(src='js/projects.js')
+  .splitview
+    if (projects.length)
+      .splitview__panel.splitview__panel_project
+        +project__list
+    .splitview__panel.splitview__panel_project
+      +project__new
+
+  +statusbar(true)
+
+  script(src='js/projects.js')

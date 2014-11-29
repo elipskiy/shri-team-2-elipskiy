@@ -25,11 +25,5 @@ module.exports.require = [
   },
   {
     block: 'chat'
-  },
-  {
-    block: 'setting'
-  },
-  {
-    block: 'dropdown'
   }
 ];

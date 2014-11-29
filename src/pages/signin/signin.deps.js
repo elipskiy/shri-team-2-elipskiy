@@ -9,9 +9,12 @@ module.exports.require = [
     block: 'statusbar'
   },
   {
-    block: 'form'
+    block: 'popup'
   },
   {
     block: 'button'
+  },
+  {
+    block: 'input'
   }
 ];

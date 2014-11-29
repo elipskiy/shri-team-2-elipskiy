@@ -1,20 +1,16 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset='UTF-8')
-    title Meepo
-    link(rel='stylesheet', href='css/profile.css')
-  body.theme_dark
-    +head
-    .splitview
-      .splitview__panel.splitview__panel_project
-        +profile
-      if (projects.length)
-        .splitview__panel.splitview__panel_project
-          +myProject
-      else
-        .splitview__panel.splitview__panel_project
-          +newProject
-    +statusbar(true)
++page('profile')
+  +head
 
-    script(src='js/profile.js')
+  .splitview
+    .splitview__panel.splitview__panel_project
+      +b-profile
+
+    .splitview__panel.splitview__panel_project
+      if (projects.length)
+        +project__list
+      else
+        +project__new
+
+  +statusbar(true)
+
+  script(src='js/profile.js')

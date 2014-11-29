@@ -1,24 +1,18 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset='UTF-8')
-    title Meepo
-    link(rel='stylesheet', href='css/index.css')
-  body.theme_dark
-    +head(true, true)
-    .splitview
-      .splitview__panel.splitview__panel_editor
-        +editor
-      .splitview__panel.splitview__panel_right
-        .tabs
-          +tab('Online:', true)
-            +user-list
-          +tab('Settings:', false)
-            +setting
-          if (user)
-            +tab('Chat:', true)
-              +chat
-    +statusbar
++page('index')
+  +head(true, true)
 
-    script(src='/channel/bcsocket.js')
-    script(src='js/index.js')
+  .splitview
+    .splitview__panel.splitview__panel_editor
+      +editor
+    .splitview__panel.splitview__panel_right
+      .tabs
+        +tab('Online:', true)
+          +user-list
+        if (user)
+          +tab('Chat:', true)
+            +chat
+
+  +statusbar
+
+  script(src='/channel/bcsocket.js')
+  script(src='js/index.js')

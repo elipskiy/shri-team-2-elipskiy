@@ -3,38 +3,4 @@
 
   box-sizing: border-box;
   height: calc(100% - 60px);
-  /*padding-bottom: 20px;*/
-  /*padding-top: 40px;*/
-}
-
-.splitview__panel {
-  width: 100%;
-
-  background-color: transparent;
-}
-
-.splitview__panel_editor {
-  position: relative;
-
-  /*box-shadow: 0 0 10px 0 rgba(0,0,0,.3);*/
-}
-.splitview__panel_right {
-  width: 250px;
-  height: 100%;
-
-  background-color: #fbf1d3;
-}
-
-.theme_dark .splitview__panel_right {
-  background-color: #002630;
-}
-
-.splitview__panel_project {
-  margin: 50px 50px 30px 50px;
-
-  height: inherit;
-}
-
-.splitview__panel_project h1 {
-  font-size: 1.2em;
 }

@@ -2,6 +2,6 @@
 
 var $ = require('jquery');
 
-$('#statusbar__editor_lang').on('click', function() {
+$('#statusbar__editor-lang').on('click', function() {
   $('.dropdown__lang_menu').toggle();
 });

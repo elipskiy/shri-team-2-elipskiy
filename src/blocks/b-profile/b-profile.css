@@ -1,4 +1,4 @@
-.profile {
+.b-profile {
   display: flex;
   overflow-x: hidden;
   overflow-y: auto;
@@ -6,18 +6,4 @@
   height: inherit;
 
   flex-wrap: wrap;
-}
-
-.profile__edit {
-  flex: 3 0 190px;
-}
-
-.edit__social {
-  padding: 0;
-
-  list-style: none;
-}
-
-.edit__social li {
-  padding: 10px 0;
 }

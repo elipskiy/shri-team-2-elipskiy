@@ -2,6 +2,6 @@ mixin statusbar(onlyColor)
   .statusbar
     span.statusbar__change-theme
     if (!onlyColor && user)
-      span#statusbar__editor_lang #{lang}
+      span#statusbar__editor-lang #{lang}
       span#statusbar__position Line: ~, Column: ~
       +dropdown__lang

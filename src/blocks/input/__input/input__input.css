@@ -1,0 +1,19 @@
+.input__input {
+  height: 1.2em;
+  padding: 2px;
+  margin: 0;
+
+  transition: border-color .3s ease;
+
+  border: 1px solid #839496;
+  border-radius: 3px;
+  background-color: transparent;
+
+  font-size: .9em;
+  line-height: 1em;
+}
+
+.input__input_hint {
+  margin: 0;
+  padding: 0;
+}

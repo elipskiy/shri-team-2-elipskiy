@@ -1,31 +1,29 @@
-mixin newProject
-  .newproject__form
+mixin project__new
+  .project__new
     h1 Create new project
     form(action='/projects/create', method="post")
-      div.form__input
-        if (error && error.create)
-          p.form__error #{error.create}
-        input(type='text', name='projectname', placeholder='Project Name')
-      div.form__input
-        textarea(name='description', placeholder='Description')
-      div.form__input
+      if (error && error.create)
+        span.error #{error.create}
+      +input('text', '', 'projectname', 'Project Name', '', true)
+      +textarea('description', 'Description')
+      +input('', '', '', '', '', true)
          +button('Create', true)
 
-mixin myProject
+mixin project__list
   h1 My Projects
   ul.projects__list
     if (error && error.remove)
-      p.form__error #{error.remove}
+      span.error #{error.remove}
     if (error && error.restore)
-      p.form__error #{error.restore}
+      span.error #{error.restore}
     if (success && success.removed)
-      li
-        span.projects__list_name The project is removed.
-        a.projects__list_restore(href='/projects/restore/' + success.docName) restore
+      li.project
+        span.project__name The project is removed.
+        a.project__restore(href='/projects/restore/' + success.docName) restore
     each val, index in projects
-      li
-        a.projects__list_name(href=val.room.docName)= val.room.name
-        a.projects__list_remove(href='/projects/remove/' + val.room.docName)
+      li.project
+        a.project__name(href=val.room.docName)= val.room.name
+        a.project__remove(href='/projects/remove/' + val.room.docName)
           .icon
-        span.projects__list_lang #{val.room.lang}
-        p.projects__list_description= val.room.description
+        span.project__lang #{val.room.lang}
+        p.project__description= val.room.description

@@ -1,32 +1,27 @@
-mixin profile
-  .profile
-    .profile__edit
+mixin b-profile
+  .b-profile
+    .b-profile__edit
       h1 Account data
       form(action='/profile/edit/user', method='post')
-        .form__input
-          if (error && error.user)
-            p.form__error #{error.user}
-          label(for='displayName') Display name:
-          input(type='text', name='displayName', placeholder='Display name', value=user)
-        .form__input
-          label(for='email') Email:
-          input(type='text', name='email', placeholder='Email', value=email)
-        .form__input
+        if (error && error.user)
+          span.error #{error.user}
+        +input('text', 'Display name:', 'displayName', 'Display name', user, true)
+        +input('text', 'Email:', 'email', 'Email', email, true)
+        +input('', '', '', '', '', true)
           +button('Save', false)
-    .profile__edit
+
+    .b-profile__edit
       h1 Change password
       form(action='/profile/edit/pass', method='post')
-        .form__input
-          if (error && error.pass)
-            p.form__error #{error.pass}
-          input(type='password', name='oldPass', placeholder='Old password')
-        .form__input
-          input(type='password', name='newPass', placeholder='New password')
-        .form__input
-          input(type='password', name='confirmPass', placeholder='Confirm new password')
-        .form__input
+        if (error && error.pass)
+          span.error #{error.pass}
+        +input('password', '', 'password', 'Old password', '', true)
+        +input('password', '', 'newPass', 'New password', '', true)
+        +input('password', '', 'confirmPass', 'Confirm new password', '', true)
+        +input('', '', '', '', '', true)
           +button('Change', false)
-    .profile__edit
+
+    .b-profile__social
       h1 Social authentication
       ul.edit__social
         li
@@ -34,5 +29,3 @@ mixin profile
             span GitHub &#10004
           else
             a(href='/profile/github') GitHub
-        li
-          a(href='#') Google

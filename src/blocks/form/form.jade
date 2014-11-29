@@ -1,8 +1,0 @@
-mixin form(action, butName)
-  .form__wrap
-    .form
-      h1.form__title= butName
-      form(action=action, method="post")
-        block
-        div.form__input
-          +button(butName)

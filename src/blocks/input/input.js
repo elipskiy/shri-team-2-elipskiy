@@ -2,7 +2,7 @@
 
 var $ = require('jquery');
 
-$('#showpass').change(function() {
+$('#showpassword').change(function() {
   if (this.checked) {
     $('#password').attr('type', 'text');
   } else {

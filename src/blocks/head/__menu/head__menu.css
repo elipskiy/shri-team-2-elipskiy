@@ -1,0 +1,7 @@
+.head__menu {
+  display: inline-block;
+}
+
+.head__menu a {
+  padding: 0 5px;
+}

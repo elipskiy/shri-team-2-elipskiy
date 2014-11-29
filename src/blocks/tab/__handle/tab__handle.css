@@ -1,0 +1,15 @@
+.tab__handle {
+  height: 40px;
+  padding: 0 15px;
+
+  letter-spacing: .7px;
+
+  background-color: #fae7b3;
+
+  font-weight: 600;
+  line-height: 40px;
+}
+
+.theme_dark .tab__handle {
+  background-color: #001e25;
+}

@@ -1,26 +1,17 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset='UTF-8')
-    title Meepo
-    link(rel='stylesheet', href='css/signup.css')
-  body.theme_dark
-    +head(false, true)
-    +form('/local-register', 'Sign up')
-      .form__input
-        if (error)
-          p.form__error #{error}
-        label(for='email') Email:
-        input(type='text', name='email', id='email')
-      .form__input
-        label(for='password') Password:
-        input(type='password', name='password', id='password')
-        .hint
-          label(for='showpass') show password:
-          input(type='checkbox', name='showpassword', id='showpass')
-      //- .form__input
-        //- label(for='email') Email:
-        //- input(type='text', name='email', id='email', placeholder='not required')
-    +statusbar(true)
++page('signup')
+  +head(false, true)
 
-    script(src='js/signup.js')
+  +popup
+    h1.popup__title Sign up
+    form(action='/local-register', method='post')
+      if (error)
+        span.error #{error}
+      +input('text', 'Email', 'email')
+      +input('password', 'Password', 'password')
+      +input('checkbox', 'show password', 'showpassword', '', '', false, 'hint')
+      +input()
+        +button('Sign up')
+
+  +statusbar(true)
+
+  script(src='js/signup.js')

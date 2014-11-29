@@ -1,0 +1,21 @@
+.statusbar__change-theme {
+  display: inline-block;
+  float: right;
+
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  margin: 2px 0px 2px 7px;
+
+  cursor: pointer;
+  transition: border .23s ease;
+  vertical-align: middle;
+
+  border: 8px solid #00222b;
+  border-radius: 4px;
+  background-color: #fbeecb;
+}
+
+.theme_dark .statusbar__change-theme {
+  border-width: 0;
+}

@@ -1,0 +1,18 @@
+.input__label {
+  display: inline-block;
+
+  min-width: 150px;
+  height: 1.2em;
+  margin-right: 33px;
+
+  text-align: left;
+
+  font-size: 1em;
+  line-height: 1.2em;
+}
+
+.input__label_hint {
+  min-width: 0;
+  margin-top: 6px;
+  margin-right: 12px;
+}

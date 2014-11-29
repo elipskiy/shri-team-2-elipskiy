@@ -1,0 +1,11 @@
+.head__user {
+  display: inline;
+
+  margin: 0 15px;
+}
+
+.user__avatar {
+  vertical-align: middle;
+
+  border-radius: 4px;
+}

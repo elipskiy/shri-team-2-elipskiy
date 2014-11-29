@@ -1,22 +1,18 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset='UTF-8')
-    title Meepo
-    link(rel='stylesheet', href='css/signin.css')
-  body.theme_dark
-    +head(true, false)
-    +form('/auth/local', 'Sign in')
-      .form__input
-        if (error)
-          p.form__error #{error}
-        label Email:
-        input(type='text', name='email')
-      .form__input
-        label Password:
-        input(type='password', name='password')
-      .form__auth
-        a(href='/auth/github') GitHub
-    +statusbar(true)
++page('signin')
+  +head(true, false)
 
-    script(src='js/signin.js')
+  +popup
+    h1.popup__title Sign in
+    form(action='/auth/local', method='post')
+      if (error)
+        span.error #{error}
+      +input('text', 'Email', 'email')
+      +input('password', 'Password', 'password')
+      +input()
+        a(href='/auth/github') Log in with GitHub
+      +input()
+        +button('Sign in')
+
+  +statusbar(true)
+
+  script(src='js/signin.js')

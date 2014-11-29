@@ -2,7 +2,6 @@
   position: relative;
 
   height: 40px;
-  /*margin-bottom: -40px;*/
 
   text-align: right;
 
@@ -16,55 +15,27 @@
   flex-shrink: 0;
 }
 
-.theme_dark .head {
-  color: #4c6a72;
-  background-color: #00222b;
-}
-
-.head__left {
+.head_left {
   position: absolute;
   left: 0;
 
   display: inline-block;
 }
 
-.head__title {
-  display: inline-block;
-
-  margin: 0 15px;
-
-  font-size: 16px;
-}
-
-.head__menu {
-  display: inline-block;
-}
-
-.head__menu a {
-  padding: 0 5px;
-}
-
-.head__right {
+.head_right {
   display: inline-block!important;
 }
 
-.head__user {
-  display: inline;
-
-  margin: 0 15px;
+.theme_dark .head {
+  color: #4c6a72;
+  background-color: #00222b;
 }
 
 .head__visible_hidden {
-  display: none;
+  display: none!important;
   visibility: hidden;
 }
 
 .head__visible_visible {
   visibility: visible;
-}
-
-.user__avatar {
-  vertical-align: middle;
-
-  border-radius: 4px;
 }

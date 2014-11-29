@@ -11,7 +11,7 @@ module.exports = function(editorName) {
 
   var editor;
   if (editorName === 'ace') {
-    editor = require('./ace-editor')(options);
+    editor = require('../ace-editor/ace-editor')(options);
   }
 
   socket.on('markerUpdate', editor.updateCursorMarker);
@@ -24,7 +24,7 @@ module.exports = function(editorName) {
 
   function init() {
     sbPosition = $('#statusbar__position');
-    sbEditor = $('#statusbar__editor_lang');
+    sbEditor = $('#statusbar__editor-lang');
     var docName = document.location.pathname.slice(1);
     openDocument(docName);
   }

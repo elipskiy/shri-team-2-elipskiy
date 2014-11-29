@@ -1,0 +1,9 @@
+.b-profile__social ul {
+  padding: 0;
+
+  list-style: none;
+}
+
+.b-profile__social li {
+  padding: 10px 0;
+}

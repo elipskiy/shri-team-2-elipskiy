@@ -11,18 +11,3 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
-.user__color {
-  position: absolute;
-  top: 17px;
-  left: 10px;
-
-  display: block;
-
-  box-sizing: border-box;
-  width: 16px;
-  height: 16px;
-  margin: 0;
-
-  border-radius: 4px;
-}

@@ -49,37 +49,6 @@ function getUserById(userId) {
   });
 }
 
-function providerAuthReg(provider, profile) {
-  return new Promise(function(resolve, reject) {
-    UserModel.findUserByProviderEmail(provider, profile.email).then(function(user) {
-      if (user) {
-        resolve(user);
-      } else {
-        UserModel.checkFreeEmail(profile.email).then(function() {
-          var user = new UserModel({
-            provider: provider,
-            name: profile.name,
-            email: profile.email,
-            avatar: profile.avatar_url,
-            gravatarHash: profile.gravatar_id
-          });
-          user.save(function(err, user) {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(user);
-            }
-          });
-        }, function(err) {
-          reject(err);
-        });
-      }
-    }).catch(function(err) {
-      reject(err);
-    });
-  });
-}
-
 function userProviderReg(provider, profile, userId) {
   return new Promise(function(resolve, reject) {
     UserModel.findUserById(userId).then(function(user) {
@@ -157,7 +126,6 @@ module.exports = {
   localReg: userLocalRegister,
   localAuth: userLocalAuth,
   getById: getUserById,
-  providerAuthReg: providerAuthReg,
   providerReg: userProviderReg,
   providerAuth: userProviderAuth,
   update: {

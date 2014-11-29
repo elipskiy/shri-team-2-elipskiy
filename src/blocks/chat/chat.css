@@ -1,4 +1,4 @@
-.tab__chat {
+.chat {
   position: absolute;
 
   overflow: auto;
@@ -7,14 +7,6 @@
   height: calc(100% - 40px);
   margin: 0;
   padding: 0;
-}
-
-.chat__messages {
-  position: relative;
-
-  overflow: auto;
-
-  height: calc(100% - 35px);
 }
 
 .chat__input {
@@ -33,35 +25,4 @@
 
 .theme_dark .chat__input {
   background-color: #001e25;
-}
-
-.chat__message {
-  position: relative;
-
-  overflow: hidden;
-
-  margin: 0;
-  padding: 5px;
-
-  line-height: 16px;
-}
-
-.message__avatar {
-  float: left;
-
-  margin-right: 5px;
-
-  border-radius: 4px;
-}
-
-.message__color {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-
-  width: 8px;
-  height: 8px;
-
-  border: 1px solid white;
-  border-radius: 4px;
 }

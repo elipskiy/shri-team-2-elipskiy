@@ -20,7 +20,6 @@ function checkSession(socket) {
 module.exports = function(io) {
 
   io.on('connection', function(socket) {
-
     checkSession(socket);
 
     socket.on('connectToRoom', function(roomId) {

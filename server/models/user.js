@@ -225,30 +225,6 @@ UserSchema.statics = {
     });
   },
 
-  findUserByProviderEmail: function(provider, userEmail) {
-    var user = this;
-
-    return new Promise(function(resolve, reject) {
-      user.findOne({provider: provider, email: userEmail})
-        .populate({
-          path: 'rooms.room',
-          match: {deleted: false},
-          select: 'name description docName lang readOnly createdAt',
-          options: {sort: '-createdAt', lean: true}
-        })
-        .exec(function(err, user) {
-          if (err) {
-            reject(err);
-          } else if (user) {
-            user.rooms = cleanDeletedRooms(user.rooms);
-            resolve(user);
-          } else {
-            resolve();
-          }
-        });
-    });
-  },
-
   findUserByProviderId: function(provider, profileId) {
     var user = this;
 

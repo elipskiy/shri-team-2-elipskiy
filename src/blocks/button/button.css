@@ -1,5 +1,6 @@
 .button {
   height: 30px;
+  margin: 0;
 
   cursor: pointer;
   transition: border-color .3s ease;
@@ -14,12 +15,6 @@
 }
 .button:hover {
   border-color: #657b83;
-}
-
-.button__lable {
-  padding: 0 15px;
-
-  color: #586e75;
 }
 
 .button_width_long {

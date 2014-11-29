@@ -6,7 +6,7 @@ var RoomModel = require('../models/room');
 function clean() {
   RoomModel.find({}, function(err, rooms) {
     rooms.some(function(room) {
-      room.users = []; // todo возвращать цвета
+      room.users = [];
       room.save();
     });
   });
