@@ -50,7 +50,6 @@ function getUserById(userId) {
 }
 
 function providerAuthReg(provider, profile) {
-  console.log('providerAuthReg(): ', profile);
   return new Promise(function(resolve, reject) {
     UserModel.findUserByProviderEmail(provider, profile.email).then(function(user) {
       if (user) {
@@ -75,6 +74,28 @@ function providerAuthReg(provider, profile) {
           reject(err);
         });
       }
+    }).catch(function(err) {
+      reject(err);
+    });
+  });
+}
+
+function userProviderReg(provider, profile, userId) {
+  return new Promise(function(resolve, reject) {
+    UserModel.findUserById(userId).then(function(user) {
+      return user.addProvider(provider, profile.id);
+    }).then(function() {
+      resolve();
+    }).catch(function(err) {
+      reject(err);
+    });
+  });
+}
+
+function userProviderAuth(provider, profileId) {
+  return new Promise(function(resolve, reject) {
+    UserModel.findUserByProviderId(provider, profileId).then(function(user) {
+      resolve(user);
     }).catch(function(err) {
       reject(err);
     });
@@ -137,6 +158,8 @@ module.exports = {
   localAuth: userLocalAuth,
   getById: getUserById,
   providerAuthReg: providerAuthReg,
+  providerReg: userProviderReg,
+  providerAuth: userProviderAuth,
   update: {
     pass: userUpdatePassword,
     data: userUpdateData

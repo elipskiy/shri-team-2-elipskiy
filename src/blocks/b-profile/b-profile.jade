@@ -27,9 +27,12 @@ mixin profile
         .form__input
           +button('Change', false)
     .profile__edit
-      h1 Social networking
+      h1 Social authentication
       ul.edit__social
         li
-          a(href='#') GitHub
+          if (githubId)
+            span GitHub &#10004
+          else
+            a(href='/profile/github') GitHub
         li
           a(href='#') Google

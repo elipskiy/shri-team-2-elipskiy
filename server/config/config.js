@@ -17,7 +17,8 @@ var config = {
     github: {
       clientID: '7398449a45a9d7044a5b',
       clientSecret: '9bd081f337b880fbd44a0e19c5c23edf69deeaf4',
-      callbackURL: '/auth/github/callback'
+      callbackURL: '/auth/github/callback',
+      passReqToCallback: true
     }
   }
 };

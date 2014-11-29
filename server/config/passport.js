@@ -2,7 +2,7 @@
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-// var GitHubStrategy = require('passport-github').Strategy;
+var GitHubStrategy = require('passport-github').Strategy;
 var auth = require('../controllers/auth');
 var dbUser = require('../db/user');
 
@@ -28,20 +28,10 @@ module.exports = function(app, config) {
     auth.register
   ));
 
-  // passport.use(new GitHubStrategy({
-  //     clientID: GITHUB_CLIENT_ID,
-  //     clientSecret: GITHUB_CLIENT_SECRET,
-  //     callbackURL: '/auth/github/callback'
-  //   },
-  //   function(accessToken, refreshToken, profile, done) {
-  //     db.user.providerAuthReg('github', profile._json).then(function(user) {
-  //       done(null, user);
-  //     }, function(err) {
-  //       // req.session.error = err;
-  //       done(err);
-  //     });
-  //   }
-  // ));
+  passport.use('github', new GitHubStrategy(
+    config.passport.github,
+    auth.provider.github
+  ));
 
   app.use(passport.initialize());
   app.use(passport.session());

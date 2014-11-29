@@ -3,6 +3,7 @@
 var express = require('express');
 var router = express.Router();
 
+var passport = require('passport');
 var profile = require('../controllers/profile');
 
 function ensureAuthenticated(req, res, next) {
@@ -17,7 +18,9 @@ router
   .get('/', ensureAuthenticated, profile.profile)
 
   .post('/edit/pass', ensureAuthenticated, profile.edit.pass)
-  .post('/edit/user', ensureAuthenticated, profile.edit.user);
+  .post('/edit/user', ensureAuthenticated, profile.edit.user)
+
+  .get('/github', ensureAuthenticated, passport.authenticate('github'));
 
 module.exports = {
   use: '/profile',

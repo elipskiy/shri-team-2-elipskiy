@@ -34,9 +34,14 @@ var UserSchema = new Schema({
     type: String,
     required: true
   },
-  provider: {
-    type: String
-  },
+  providers: [{
+    provider: {
+      type: String
+    },
+    profileId: {
+      type: String
+    }
+  }],
   salt: {
     type: String,
     required: true
@@ -107,6 +112,25 @@ UserSchema.methods = {
       });
 
       reject(new Error('getRoomById(docName): Room does not exist'));
+    });
+  },
+
+  addProvider: function(provider, profileId) {
+    var user = this;
+
+    return new Promise(function(resolve, reject) {
+      user.providers.push({
+        provider: provider,
+        profileId: profileId
+      });
+
+      user.save(function(err, user) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(user);
+        }
+      });
     });
   }
 };
@@ -206,6 +230,30 @@ UserSchema.statics = {
 
     return new Promise(function(resolve, reject) {
       user.findOne({provider: provider, email: userEmail})
+        .populate({
+          path: 'rooms.room',
+          match: {deleted: false},
+          select: 'name description docName lang readOnly createdAt',
+          options: {sort: '-createdAt', lean: true}
+        })
+        .exec(function(err, user) {
+          if (err) {
+            reject(err);
+          } else if (user) {
+            user.rooms = cleanDeletedRooms(user.rooms);
+            resolve(user);
+          } else {
+            resolve();
+          }
+        });
+    });
+  },
+
+  findUserByProviderId: function(provider, profileId) {
+    var user = this;
+
+    return new Promise(function(resolve, reject) {
+      user.findOne({'providers.provider': provider, 'providers.profileId': profileId})
         .populate({
           path: 'rooms.room',
           match: {deleted: false},

@@ -23,10 +23,17 @@ exports.edit = {
 
 exports.profile = function(req, res) {
   dbUser.getById(req.user._id).then(function(user) {
+    var githubId;
+    user.providers.some(function(provider) {
+      if (provider.provider === 'github') {
+        githubId = provider.profileId;
+      }
+    });
     res.render('profile', {
       user: user.displayName,
       email: user.email,
       projects: user.rooms,
+      githubId: githubId,
       gravatar: req.user.gravatarHash
     });
   });

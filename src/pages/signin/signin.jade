@@ -6,15 +6,17 @@ html(lang='en')
     link(rel='stylesheet', href='css/signin.css')
   body.theme_dark
     +head(true, false)
-    +form('/local-auth', 'Sign in')
-      div.form__input
+    +form('/auth/local', 'Sign in')
+      .form__input
         if (error)
           p.form__error #{error}
         label Email:
         input(type='text', name='email')
-      div.form__input
+      .form__input
         label Password:
         input(type='password', name='password')
+      .form__auth
+        a(href='/auth/github') GitHub
     +statusbar(true)
 
     script(src='js/signin.js')
