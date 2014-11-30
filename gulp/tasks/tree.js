@@ -8,5 +8,7 @@ var levels = [
 ];
 
 gulp.task('tree', function () {
-  global.tree = bem.objects(levels).pipe(bem.deps()).pipe(bem.tree());
+  global.tree = bem.objects(levels)
+    .pipe(bem.deps())
+    .pipe(bem.tree());
 });

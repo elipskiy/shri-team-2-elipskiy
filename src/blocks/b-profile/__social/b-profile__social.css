@@ -7,3 +7,17 @@
 .b-profile__social li {
   padding: 10px 0;
 }
+
+.social__name {
+  padding-right: 10px;
+}
+
+.social__icon_added {
+  display: inline-block;
+
+  width: 1em;
+  height: 1em;
+
+  background-image: url(/img/b-profile__social_added.svg);
+  background-size: cover;
+}

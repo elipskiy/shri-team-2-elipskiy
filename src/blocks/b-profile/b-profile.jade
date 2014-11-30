@@ -26,6 +26,7 @@ mixin b-profile
       ul.edit__social
         li
           if (githubId)
-            span GitHub &#10004
+            span.social__name GitHub
+            .social__icon_added
           else
             a(href='/profile/github') GitHub

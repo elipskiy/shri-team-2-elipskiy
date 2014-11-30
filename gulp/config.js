@@ -16,6 +16,9 @@ module.exports = {
   html: {
     dest: dest
   },
+  img: {
+    dest: dest + '/img'
+  },
   supervisor: {
     path: 'server/index.js',
     opts: {
