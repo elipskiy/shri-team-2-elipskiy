@@ -28,10 +28,16 @@ function createRoom(room, creator) {
   });
 }
 
-function removeRoom(roomId, creator) {
+function removeRoom(docName, userId) {
   return new Promise(function(resolve, reject) {
-    RoomModel.getRoomWithCreator(roomId, creator).then(function(room) {
-      return room.delete();
+    RoomModel.getRoom(docName).then(function(room) {
+      if (room.creator === userId) {
+        return room.delete();
+      } else {
+        return UserModel.findUserById(userId).then(function(user) {
+          return user.deleteRoom(docName);
+        });
+      }
     }).then(function() {
       resolve(true);
     }).catch(function(err) {
@@ -40,10 +46,16 @@ function removeRoom(roomId, creator) {
   });
 }
 
-function restoreRoom(roomId, creator) {
+function restoreRoom(docName, userId) {
   return new Promise(function(resolve, reject) {
-    RoomModel.getRoomWithCreator(roomId, creator).then(function(room) {
-      return room.restore();
+    RoomModel.getRoom(docName).then(function(room) {
+      if (room.creator === userId) {
+        return room.restore();
+      } else {
+        return UserModel.findUserById(userId).then(function(user) {
+          return user.addRoom(room.id);
+        });
+      }
     }).then(function() {
       resolve(true);
     }).catch(function(err) {
@@ -52,9 +64,9 @@ function restoreRoom(roomId, creator) {
   });
 }
 
-function getRoom(roomId) {
+function getRoom(docName) {
   return new Promise(function(resolve, reject) {
-    RoomModel.getRoom(roomId).then(function(room) {
+    RoomModel.getRoom(docName).then(function(room) {
       resolve(room);
     }).catch(function(err) {
       reject(err);
@@ -62,9 +74,9 @@ function getRoom(roomId) {
   });
 }
 
-function getUsersFromRoom(roomId) {
+function getUsersFromRoom(docName) {
   return new Promise(function(resolve, reject) {
-    RoomModel.getUsers(roomId).then(function(users) {
+    RoomModel.getUsers(docName).then(function(users) {
       resolve(users);
     }).catch(function(err) {
       reject(err);
@@ -72,9 +84,9 @@ function getUsersFromRoom(roomId) {
   });
 }
 
-function addUserToRoom(roomId, userId) {
+function addUserToRoom(docName, userId) {
   return new Promise(function(resolve, reject) {
-    RoomModel.getRoom(roomId).then(function(room) {
+    RoomModel.getRoom(docName).then(function(room) {
       return room.addUser(userId);
     }).then(function() {
       resolve(true);
@@ -84,9 +96,9 @@ function addUserToRoom(roomId, userId) {
   });
 }
 
-function removeUserFromRoom(roomId, userId) {
+function removeUserFromRoom(docName, userId) {
   return new Promise(function(resolve, reject) {
-    RoomModel.getRoom(roomId).then(function(room) {
+    RoomModel.getRoom(docName).then(function(room) {
       return room.removeUser(userId);
     }).then(function() {
       resolve(true);
@@ -96,9 +108,9 @@ function removeUserFromRoom(roomId, userId) {
   });
 }
 
-function setLang(roomId, lang) {
+function setLang(docName, lang) {
   return new Promise(function(resolve, reject) {
-    RoomModel.getRoom(roomId).then(function(room) {
+    RoomModel.getRoom(docName).then(function(room) {
       return room.setLang(lang);
     }).then(function() {
       resolve(true);
@@ -108,9 +120,9 @@ function setLang(roomId, lang) {
   });
 }
 
-function userUpdateCursorPosition(roomId, userId, cursorPosition) {
+function userUpdateCursorPosition(docName, userId, cursorPosition) {
   return new Promise(function(resolve, reject) {
-    RoomModel.getRoom(roomId).then(function(room) {
+    RoomModel.getRoom(docName).then(function(room) {
       return room.userSetCursor(userId, cursorPosition);
     }).then(function() {
       resolve(true);
@@ -120,9 +132,9 @@ function userUpdateCursorPosition(roomId, userId, cursorPosition) {
   });
 }
 
-function getUser(roomId, userId) {
+function getUser(docName, userId) {
   return new Promise(function(resolve, reject) {
-    RoomModel.getUser(roomId, userId).then(function(user) {
+    RoomModel.getUser(docName, userId).then(function(user) {
       resolve(user);
     }).catch(function(err) {
       reject(err);

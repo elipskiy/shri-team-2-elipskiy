@@ -2,6 +2,7 @@
 'use strict';
 
 var UserModel = require('../models/user');
+var RoomModel = require('../models/room');
 var Promise = require('es6-promise').Promise;
 
 function userLocalRegister(userEmail, userPassword) {
@@ -122,6 +123,22 @@ function userUpdateData(data, userId) {
   });
 }
 
+function userUpdateRoom(userId, docName) {
+  return new Promise(function(resolve, reject) {
+    var roomId;
+    RoomModel.getRoom(docName).then(function(room) {
+      roomId = room.id;
+      return UserModel.findUserById(userId);
+    }).then(function(user) {
+      return user.addRoom(roomId);
+    }).then(function() {
+      resolve();
+    }).catch(function(err) {
+      reject(err);
+    });
+  });
+}
+
 module.exports = {
   localReg: userLocalRegister,
   localAuth: userLocalAuth,
@@ -130,6 +147,7 @@ module.exports = {
   providerAuth: userProviderAuth,
   update: {
     pass: userUpdatePassword,
-    data: userUpdateData
+    data: userUpdateData,
+    addRoom: userUpdateRoom
   }
 };

@@ -87,31 +87,69 @@ UserSchema.methods = {
     var user = this;
 
     return new Promise(function(resolve, reject) {
-      user.rooms.push({
-        room: roomId
-      });
+      user.getRoomById(roomId).then(function() {
+        reject('addRoom(roomId): This room is already added');
+      }, function(err) {
+        return resolve(err);
+      }).then(function() {
+        user.rooms.push({
+          room: roomId
+        });
 
-      user.save(function(err, user) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(user);
-        }
+        user.save(function(err, user) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(user);
+          }
+        });
       });
     });
   },
 
-  getRoomById: function(docName) {
+  deleteRoom: function(docName) {
     var user = this;
 
     return new Promise(function(resolve, reject) {
-      user.rooms.some(function(room) {
+      var foundRoom = false;
+      user.rooms.some(function(room, pos) {
         if (room.room.docName === docName) {
-          resolve(room.room);
+          user.rooms.splice(pos, 1);
+          foundRoom = true;
         }
       });
 
-      reject(new Error('getRoomById(docName): Room does not exist'));
+      if (!foundRoom) {
+        reject(new Error('deleteRoom(docName): Room does not exist'));
+      } else {
+        user.save(function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(true);
+          }
+        });
+      }
+    });
+  },
+
+  getRoomById: function(roomId) {
+    var user = this;
+
+    return new Promise(function(resolve, reject) {
+      var foundRoom;
+
+      user.rooms.some(function(room) {
+        if (room.room.id === roomId) {
+          foundRoom = room.room;
+        }
+      });
+
+      if (foundRoom) {
+        resolve(foundRoom);
+      } else {
+        reject(new Error('getRoomById(roomId): Room does not exist'));
+      }
     });
   },
 

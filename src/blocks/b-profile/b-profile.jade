@@ -5,9 +5,9 @@ mixin b-profile
       form(action='/profile/edit/user', method='post')
         if (error && error.user)
           span.error #{error.user}
-        +input('text', 'Display name:', 'displayName', 'Display name', user, true)
-        +input('text', 'Email:', 'email', 'Email', email, true)
-        +input('', '', '', '', '', true)
+        +input('text', 'Display name:', 'displayName', user, true)
+        +input('text', 'Email:', 'email', email, true)
+        +input-placeholder()
           +button('Save', false)
 
     .b-profile__edit
@@ -15,10 +15,10 @@ mixin b-profile
       form(action='/profile/edit/pass', method='post')
         if (error && error.pass)
           span.error #{error.pass}
-        +input('password', '', 'password', 'Old password', '', true)
-        +input('password', '', 'newPass', 'New password', '', true)
-        +input('password', '', 'confirmPass', 'Confirm new password', '', true)
-        +input('', '', '', '', '', true)
+        +input-placeholder('password', 'Old password', 'password')
+        +input-placeholder('password', 'New password', 'newPass')
+        +input-placeholder('password', 'Confirm new password', 'confirmPass')
+        +input-placeholder()
           +button('Change', false)
 
     .b-profile__social

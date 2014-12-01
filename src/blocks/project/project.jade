@@ -4,9 +4,9 @@ mixin project__new
     form(action='/projects/create', method="post")
       if (error && error.create)
         span.error #{error.create}
-      +input('text', '', 'projectname', 'Project Name', '', true)
+      +input-placeholder('text', 'Project Name', 'projectname', '', true)
       +textarea('description', 'Description')
-      +input('', '', '', '', '', true)
+      +input-placeholder()
          +button('Create', true)
 
 mixin project__list

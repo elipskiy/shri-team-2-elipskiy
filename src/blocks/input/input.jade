@@ -1,16 +1,13 @@
-mixin input(type, label, name, placeholder, value, miniPadding, hint)
-  .input(class="input__wrap_type_#{type}", class=hint ? 'input__wrap_hint' : '', class=miniPadding ? 'input__wrap_mini-padding' : '')
+mixin input(type, label, name, value, miniPadding, hint)
+  .input(class="input__wrap_type_#{type}", class=hint ? 'input__wrap_hint' : '', class=miniPadding ? 'input_mini-padding' : '')
     if (hint)
       label
         span.input__label_hint #{label}:
         input.input__input_hint(type=type, name=name, id=name, value=value)
     else
       if (type)
-        if (label)
-          label
-            span.input__label #{label}
-            input.input__input(type=type, name=name, id=name, placeholder=placeholder, value=value)
-         else
-            input.input__input(type=type, name=name, id=name, placeholder=placeholder, value=value)
+        label
+          span.input__label #{label}
+          input.input__input(type=type, name=name, id=name, value=value)
       else
         block

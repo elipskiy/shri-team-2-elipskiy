@@ -1,5 +1,8 @@
 module.exports.expect = [
   {
-    elems: ['menu', 'title', 'user']
+    block: 'hint'
+  },
+  {
+    elems: ['menu', 'title', 'user', 'project']
   }
 ];

@@ -1,0 +1,35 @@
+.head__project {
+  display: inline-block;
+}
+
+.project__icon {
+  position: relative;
+  display: inline-block;
+
+  margin: 0 4px;
+
+  transition: opacity .3s ease;
+  vertical-align: middle;
+
+  background-size: cover;
+}
+
+.project__icon:hover {
+  opacity: .75;
+}
+
+.project__icon.icon__add {
+  width: 15px;
+  height: 15px;
+
+  cursor: pointer;
+
+  background-image: url(/img/project__add.svg);
+}
+
+.project__icon.icon__readonly {
+  width: 12px;
+  height: 19px;
+
+  background-image: url(/img/project__readonly.svg);
+}

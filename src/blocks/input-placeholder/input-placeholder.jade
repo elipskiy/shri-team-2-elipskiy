@@ -1,0 +1,6 @@
+mixin input-placeholder(type, placeholder, name, value, bigPadding)
+  .input-placeholder(class="input-placeholder__wrap_type_#{type}", class=bigPadding ? 'input-placeholder_big-padding' : '')
+    if (type)
+      input.input-placeholder__input(type=type, name=name, id=name, placeholder=placeholder, value=value)
+    else
+      block

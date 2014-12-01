@@ -1,6 +1,8 @@
 .head {
   position: relative;
 
+  display: flex;
+
   height: 40px;
 
   text-align: right;
@@ -12,18 +14,9 @@
   font-size: .8em;
   line-height: 40px;
 
+  align-items: stretch;
   flex-shrink: 0;
-}
-
-.head_left {
-  position: absolute;
-  left: 0;
-
-  display: inline-block;
-}
-
-.head_right {
-  display: inline-block!important;
+  justify-content: space-between;
 }
 
 .theme_dark .head {

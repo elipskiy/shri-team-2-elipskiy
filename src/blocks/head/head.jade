@@ -6,6 +6,13 @@ mixin head(signupVisible, signinVisible)
         .head__menu
           a(href='/projects') Projects
           a(href='/profile') Profile
+    .head_center
+      if (room)
+        .head__project
+          span.head__project.project__icon.icon__readonly.hint(data-hint='The project is read-only')
+          span.head__project.project__name #{room.name}
+          if (user && !roomIsAdded)
+            span.head__project.project__icon.icon__add.hint(data-hint='Add project yourself')
     .head_right
       if (user)
         img.head__user.user__avatar(src='http://www.gravatar.com/avatar/' + gravatar + '?s=30&d=blank')

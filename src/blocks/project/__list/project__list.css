@@ -31,9 +31,16 @@
 }
 
 .project__remove .icon {
-  width: 20px;
+  width: 17px;
   height: 20px;
+  margin-left: 4px;
+
+  transition: opacity .3s ease;
 
   background-image: url(/img/project__remove.svg);
   background-size: cover;
+}
+
+.project__remove .icon:hover {
+  opacity: .75;
 }

@@ -3,6 +3,9 @@ module.exports.require = [
     block: 'input'
   },
   {
+    block: 'input-placeholder'
+  },
+  {
     block: 'textarea'
   },
   {

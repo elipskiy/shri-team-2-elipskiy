@@ -1,0 +1,24 @@
+.hint {
+  z-index: 9999;
+}
+
+.hint:hover:before {
+  position: absolute;
+  bottom: -48px;
+  left: 18px;
+
+  height: 15px;
+  padding: 10px;
+
+  content: attr(data-hint);
+  white-space: nowrap;
+
+  border-radius: 4px;
+  background-color: #fbeecb;
+
+  line-height: 15px;
+}
+
+.theme_dark .hint:hover:before {
+  background-color: #00222b;
+}
