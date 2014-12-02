@@ -5,7 +5,7 @@ var $ = require('jquery');
 
 var userList = $('.user-list');
 
-function onUsersUpdate(users) {
+function onUpdateUserList(users) {
   userList.empty();
 
   users.forEach(function(user) {
@@ -19,4 +19,4 @@ function onUsersUpdate(users) {
   });
 }
 
-socket.on('usersUpdate', onUsersUpdate);
+socket.on('updateUserList', onUpdateUserList);

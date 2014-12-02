@@ -102,6 +102,10 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg(userEmail, userPass).then(function(user) {
           userId = user._id;
+          return dbRoom.create({projectname: 'test'}, userId);
+        }).then(function(room) {
+          return dbRoom.remove(room.docName, userId);
+        }).then(function() {
           done();
         });
       });
@@ -109,6 +113,10 @@ describe('db', function() {
       after(function(done) {
         connection.db.dropDatabase();
         done();
+      });
+
+      it('should return empty rooms because all removed', function() {
+        return should(dbUser.getById(userId)).to.eventually.deep.property('rooms').be.empty;
       });
 
       it('should return user', function() {
@@ -237,6 +245,10 @@ describe('db', function() {
         return should(dbUser.update.data({displayName: '', email: 'qwe@'}, userId)).to.be.rejected;
       });
 
+      it('should be rejected if user not found', function() {
+        return should(dbUser.update.data({displayName: 'test', email: 'qwe@qwe.qwe'}, 1)).to.be.rejected;
+      });
+
       it('should return email as displayName if displayNamde is empty', function() {
         return should(dbUser.update.data({displayName: '', email: 'vasya@yandex.ru'}, userId)).to.eventually.deep.property('displayName', 'vasya@yandex.ru');
       });
@@ -274,6 +286,10 @@ describe('db', function() {
 
       it('should return True if room added', function() {
         return should(dbUser.update.addRoom(userId, roomId)).to.eventually.be.true;
+      });
+
+      it('should be rejected if room added before', function() {
+        return should(dbUser.update.addRoom(userId, roomId)).to.be.rejected;
       });
 
       it('should be rejected if room deleted', function() {

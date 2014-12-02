@@ -3,10 +3,12 @@
 var path = require('path');
 var rootPath = path.normalize(__dirname + '/../../');
 var PORT = process.env.PORT || 3000;
+var DEBUG = process.env.DEBUG || false;
 
 var config = {
   root: rootPath,
   port: PORT,
+  debug: DEBUG,
   db: 'mongodb://localhost/meepo',
   passport: {
     local: {

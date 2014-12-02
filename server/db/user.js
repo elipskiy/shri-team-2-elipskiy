@@ -13,10 +13,8 @@ function userLocalRegister(userEmail, userPassword) {
     }).then(function(user) {
       resolve(user);
     }).catch(function(err) {
-      if (err.errors) {
-        if (err.errors.email) {
-          reject(err.errors.email.message);
-        }
+      if (err.errors && err.errors.email) {
+        reject(err.errors.email.message);
       } else {
         reject(err);
       }
@@ -100,10 +98,8 @@ function userUpdateData(data, userId) {
     }).then(function(user) {
       resolve(user);
     }).catch(function(err) {
-      if (err.errors) {
-        if (err.errors.email) {
-          reject(err.errors.email.message);
-        }
+      if (err.errors && err.errors.email) {
+        reject(err.errors.email.message);
       } else {
         reject(err);
       }

@@ -14,10 +14,10 @@ module.exports = function(editorName) {
     editor = require('../ace-editor/ace-editor')(options);
   }
 
-  socket.on('markerUpdate', editor.updateCursorMarker);
-  socket.on('markerRemove', editor.removeMarker);
-  socket.on('connectedUserReadonly', editor.editorChangeReadonly);
-  socket.on('changeLang', updateLanguage);
+  socket.on('editorMarkerUpdate', editor.updateMarker);
+  socket.on('editorMarkerRemove', editor.removeMarker);
+  socket.on('connectedUserReadonly', editor.changeReadonly);
+  socket.on('roomChangedLang', updateLanguage);
 
   var sbPosition;
   var sbEditor;
@@ -47,7 +47,7 @@ module.exports = function(editorName) {
   function updateCursorPosition(cursorPosition) {
     sbPosition.text('Line: ' + (cursorPosition.row + 1).toString() +
      ', Column: ' + (cursorPosition.column + 1).toString());
-    socket.emit('userCursorPosition', cursorPosition);
+    socket.emit('userUpdateCursorPosition', cursorPosition);
   }
 
   function updateLanguage(data) {

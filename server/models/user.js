@@ -4,6 +4,8 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 var Promise = require('es6-promise').Promise;
+var saveModel = require('../libs/promiseSaveMongo.js');
+var cleanDeletedRooms = require('../libs/cleanDeletedRooms.js');
 
 var Schema = mongoose.Schema;
 var schemaOptions = {
@@ -88,7 +90,7 @@ UserSchema.methods = {
 
     return new Promise(function(resolve, reject) {
       user.getRoomById(roomId).then(function() {
-        reject('addRoom(roomId): This room is already added');
+        return reject(new Error('addRoom(roomId): This room is already added'));
       }, function(err) {
         return resolve(err);
       }).then(function() {
@@ -96,13 +98,11 @@ UserSchema.methods = {
           room: roomId
         });
 
-        user.save(function(err, user) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(user);
-          }
-        });
+        return saveModel(user);
+      }).then(function(user) {
+        resolve(user);
+      }).catch(function(err) {
+        reject(err);
       });
     });
   },
@@ -111,23 +111,17 @@ UserSchema.methods = {
     var user = this;
 
     return new Promise(function(resolve, reject) {
-      var foundRoom = false;
-      user.rooms.some(function(room, pos) {
-        if (room.room.docName === docName) {
-          user.rooms.splice(pos, 1);
-          foundRoom = true;
-        }
-      });
+      var foundRoom = user.findRoom(docName);
 
       if (!foundRoom) {
         reject(new Error('deleteRoom(docName): Room does not exist'));
       } else {
-        user.save(function(err) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(true);
-          }
+        user.rooms.splice(foundRoom.pos, 1);
+
+        saveModel(user).then(function(user) {
+          resolve(user);
+        }, function(err) {
+          reject(err);
         });
       }
     });
@@ -162,14 +156,30 @@ UserSchema.methods = {
         profileId: profileId
       });
 
-      user.save(function(err, user) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(user);
-        }
+      saveModel(user).then(function(user) {
+        resolve(user);
+      }, function(err) {
+        reject(err);
       });
     });
+  },
+
+  findRoom: function(roomId) {
+    var found;
+    this.rooms.some(function(room, pos) {
+      if (room.room.docName.toString() === roomId.toString()) {
+        found = {
+          room: room,
+          pos: pos
+        };
+      }
+    });
+
+    if (found) {
+      return found;
+    } else {
+      return false;
+    }
   }
 };
 
@@ -318,16 +328,6 @@ UserSchema.path('email').validate(function(email) {
   var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
   return emailRegex.test(email);
 }, 'The specified email is invalid.');
-
-var cleanDeletedRooms = function(rooms) {
-  return rooms.filter(function(room) {
-    if (room.room && room.room._id) {
-      return true;
-    } else {
-      return false;
-    }
-  });
-};
 
 var UserModel = mongoose.model('User', UserSchema);
 

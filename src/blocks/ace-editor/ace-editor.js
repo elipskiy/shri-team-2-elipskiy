@@ -42,11 +42,11 @@ module.exports = function(a) {
     doc.attach_ace(editor);
   }
 
-  function editorChangeReadonly(user) {
+  function changeReadonly(user) {
     editor.setReadOnly(user.readonly);
   }
 
-  function updateCursorMarker(data) {
+  function updateMarker(data) {
     if (me.id() === data.userId) {
       return true;
     }
@@ -102,9 +102,9 @@ module.exports = function(a) {
 
   return {
     attachToDocument: attachToDocument,
-    updateCursorMarker: updateCursorMarker,
+    updateMarker: updateMarker,
     removeMarker: removeMarker,
-    editorChangeReadonly: editorChangeReadonly,
+    changeReadonly: changeReadonly,
     changeMode: changeMode
   };
 };

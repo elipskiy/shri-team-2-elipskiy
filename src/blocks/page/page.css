@@ -35,6 +35,10 @@ textarea {
   color: #4c6a72;
 }
 
+:focus::placeholder {
+  color: transparent;
+}
+
 .error {
   font-size: .8em;
 }
