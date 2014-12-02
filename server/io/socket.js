@@ -1,6 +1,8 @@
 'use strict';
 
 var dbRoom = require('../db/room');
+var debug = require('../config/config').debug;
+console.log(debug);
 
 function checkSession(socket) {
   if (socket.request.session.passport) {
@@ -22,12 +24,17 @@ module.exports = function(io) {
   io.on('connection', function(socket) {
     checkSession(socket);
 
-    socket.on('connectToRoom', function(roomId) {
+    socket.on('userConnectToRoom', function(roomId) {
       socket.roomId = roomId;
       socket.join(roomId);
-      socket.emit('connectedUserId', {id: socket.userId});
+      socket.emit('userConnectedToRoom', {id: socket.userId});
+
       dbRoom.getUsers(roomId).then(function(users) {
-        io.to(roomId).emit('usersUpdate', users);
+        io.to(roomId).emit('updateUserList', users);
+      }).catch(function(error) {
+        if (debug) {
+          console.log('userConnectToRoom: ', error);
+        }
       });
     });
 
@@ -42,9 +49,11 @@ module.exports = function(io) {
       dbRoom.update.addUser(roomId, userId).then(function() {
         return dbRoom.getUsers(roomId);
       }).then(function(users) {
-        io.to(roomId).emit('usersUpdate', users);
+        io.to(roomId).emit('updateUserList', users);
       }).catch(function(error) {
-        console.log('userConnect: ', error);
+        if (debug) {
+          console.log('userConnect: ', error);
+        }
       });
     });
 
@@ -58,15 +67,19 @@ module.exports = function(io) {
       var roomId = socket.roomId;
       var userId = socket.userId;
 
-      io.to(roomId).emit('markerRemove', {userId: userId});
+      io.to(roomId).emit('editorMarkerRemove', {userId: userId});
       dbRoom.update.removeUser(roomId, userId).then(function() {
         return dbRoom.getUsers(roomId);
       }).then(function(users) {
-        io.to(roomId).emit('usersUpdate', users);
+        io.to(roomId).emit('updateUserList', users);
+      }).catch(function(error) {
+        if (debug) {
+          console.log('disconnect: ', error);
+        }
       });
     });
 
-    socket.on('userCursorPosition', function(position) {
+    socket.on('userUpdateCursorPosition', function(position) {
       checkSession(socket);
       if (socket.readonly) {
         return;
@@ -78,9 +91,11 @@ module.exports = function(io) {
       dbRoom.user.setCursor(roomId, userId, position).then(function() {
         return dbRoom.user.get(roomId, userId);
       }).then(function(user) {
-        io.to(roomId).emit('markerUpdate', user);
+        io.to(roomId).emit('editorMarkerUpdate', user);
       }).catch(function(error) {
-        console.log('userCursorPosition: ', error);
+        if (debug) {
+          console.log('userUpdateCursorPosition: ', error);
+        }
       });
     });
 
@@ -94,6 +109,10 @@ module.exports = function(io) {
 
       dbRoom.user.get(roomId, userId).then(function(user) {
         io.to(roomId).emit('userChatMessage', {user: user, message: message});
+      }).catch(function(error) {
+        if (debug) {
+          console.log('userChatMessage: ', error);
+        }
       });
     });
 
@@ -105,11 +124,12 @@ module.exports = function(io) {
       var roomId = socket.roomId;
 
       dbRoom.update.lang(roomId, lang).then(function() {
-        io.to(roomId).emit('changeLang', {lang: lang});
+        io.to(roomId).emit('roomChangedLang', {lang: lang});
       }).catch(function(error) {
-        console.log('roomChangeLang: ', error);
+        if (debug) {
+          console.log('roomChangeLang: ', error);
+        }
       });
     });
   });
-
 };

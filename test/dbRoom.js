@@ -297,7 +297,7 @@ describe('db', function() {
       });
 
       it('should remove user from room', function() {
-        return dbRoom.update.removeUser(roomId, userId).then(function(t) {
+        return dbRoom.update.removeUser(roomId, userId).then(function() {
           return should(dbRoom.getUsers(roomId)).to.eventually.be.empty;
         });
       });

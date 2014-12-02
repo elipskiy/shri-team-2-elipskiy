@@ -3,7 +3,7 @@
 var socket = require('./socket');
 
 function onConnect() {
-  socket.emit('connectToRoom', window.location.pathname.slice(1));
+  socket.emit('userConnectToRoom', window.location.pathname.slice(1));
   socket.emit('userConnect');
 }
 

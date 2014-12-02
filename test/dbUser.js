@@ -102,6 +102,10 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg(userEmail, userPass).then(function(user) {
           userId = user._id;
+          return dbRoom.create({projectname: 'test'}, userId);
+        }).then(function(room) {
+          return dbRoom.remove(room.docName, userId);
+        }).then(function() {
           done();
         });
       });
@@ -109,6 +113,10 @@ describe('db', function() {
       after(function(done) {
         connection.db.dropDatabase();
         done();
+      });
+
+      it('should return empty rooms because all removed', function() {
+        return should(dbUser.getById(userId)).to.eventually.deep.property('rooms').be.empty;
       });
 
       it('should return user', function() {
