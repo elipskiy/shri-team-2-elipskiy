@@ -4,26 +4,22 @@
 var UserModel = require('../models/user');
 var RoomModel = require('../models/room');
 var Promise = require('es6-promise').Promise;
+var save = require('../libs/promiseSaveMongo.js');
 
 function userLocalRegister(userEmail, userPassword) {
   return new Promise(function(resolve, reject) {
     UserModel.checkFreeEmail(userEmail).then(function() {
-      var user = new UserModel({email: userEmail, password: userPassword});
-      user.save(function(err, user) {
-        if (err) {
-          if (err.errors) {
-            if (err.errors.email) {
-              reject(err.errors.email.message);
-            }
-          } else {
-            reject(err);
-          }
-        } else {
-          resolve(user);
-        }
-      });
+      return UserModel.create({email: userEmail, password: userPassword});
+    }).then(function(user) {
+      resolve(user);
     }).catch(function(err) {
-      reject(err);
+      if (err.errors) {
+        if (err.errors.email) {
+          reject(err.errors.email.message);
+        }
+      } else {
+        reject(err);
+      }
     });
   });
 }
@@ -85,13 +81,9 @@ function userUpdatePassword(passwords, userId) {
         return user.checkPassword(passwords.oldPass);
       }).then(function() {
         foundUser.password = passwords.newPass;
-        foundUser.save(function(err, user) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(user);
-          }
-        });
+        return save(foundUser);
+      }).then(function(user) {
+        resolve(user);
       }).catch(function(err) {
         reject(err);
       });
@@ -104,21 +96,17 @@ function userUpdateData(data, userId) {
     UserModel.findUserById(userId).then(function(user) {
       user.name = data.displayName;
       user.email = data.email;
-      user.save(function(err, user) {
-        if (err) {
-          if (err.errors) {
-            if (err.errors.email) {
-              reject(err.errors.email.message);
-            }
-          } else {
-            reject(err);
-          }
-        } else {
-          resolve(user);
-        }
-      });
+      return save(user);
+    }).then(function(user) {
+      resolve(user);
     }).catch(function(err) {
-      reject(err);
+      if (err.errors) {
+        if (err.errors.email) {
+          reject(err.errors.email.message);
+        }
+      } else {
+        reject(err);
+      }
     });
   });
 }

@@ -8,22 +8,18 @@ var Promise = require('es6-promise').Promise;
 function createRoom(room, creator) {
   return new Promise(function(resolve, reject) {
     var roomName = room.projectname;
-    var roomDescrip = room.description;
-    var roomReadonly = room.readonly;
+    var roomDescription = room.description;
+    var createdRoom;
 
-    var newRoom = new RoomModel({name: roomName, description: roomDescrip, readOnly: roomReadonly, creator: creator});
-    newRoom.save(function(err, room) {
-      if (err) {
-        reject(err);
-      } else {
-        UserModel.findUserById(creator).then(function(user) {
-          return user.addRoom(room._id);
-        }).then(function() {
-          resolve(room);
-        }).catch(function(err) {
-          reject(err);
-        });
-      }
+    RoomModel.newRoom(roomName, roomDescription, creator).then(function(room) {
+      createdRoom = room;
+      return UserModel.findUserById(creator);
+    }).then(function(user) {
+      return user.addRoom(createdRoom.id);
+    }).then(function() {
+      resolve(createdRoom);
+    }).catch(function(err) {
+      reject(err);
     });
   });
 }

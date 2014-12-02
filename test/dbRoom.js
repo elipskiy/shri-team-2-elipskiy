@@ -63,18 +63,15 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
           userCreatorId = user._id;
-          return userCreatorId;
+          return dbRoom.create({projectname: 'test'}, userCreatorId);
+        }).then(function(room) {
+          roomId = room.docName;
+          return dbUser.localReg('vasya2@test.ru', 'pass');
         }).then(function(user) {
-          dbRoom.create({projectname: 'test'}, user).then(function(room) {
-            roomId = room.docName;
-          }).then(function() {
-            dbUser.localReg('vasya2@test.ru', 'pass').then(function(user) {
-              userId = user._id;
-              dbUser.update.addRoom(userId, roomId).then(function() {
-                done();
-              });
-            });
-          });
+          userId = user._id;
+          return dbUser.update.addRoom(userId, roomId);
+        }).then(function() {
+          done();
         });
       });
 
@@ -113,17 +110,15 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
           userCreatorId = user._id;
+          return dbRoom.create({projectname: 'test'}, userCreatorId);
+        }).then(function(room) {
+          roomId = room.docName;
+          return dbUser.localReg('vasya2@test.ru', 'pass');
+        }).then(function(user) {
+          userId = user._id;
+          return dbUser.update.addRoom(userId, roomId);
         }).then(function() {
-          dbRoom.create({projectname: 'test'}, userCreatorId).then(function(room) {
-            roomId = room.docName;
-          }).then(function() {
-            dbUser.localReg('vasya2@test.ru', 'pass').then(function(user) {
-              userId = user._id;
-              dbUser.update.addRoom(userId, roomId).then(function() {
-                done();
-              });
-            });
-          });
+          done();
         });
       });
 
@@ -161,12 +156,10 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
           userId = user._id;
-          return userId;
-        }).then(function(userId) {
-          dbRoom.create({projectname: 'test'}, userId).then(function(room) {
-            roomId = room.docName;
-            done();
-          });
+          return dbRoom.create({projectname: 'test'}, userId);
+        }).then(function(room) {
+          roomId = room.docName;
+          done();
         })
       });
 
@@ -197,17 +190,13 @@ describe('db', function() {
 
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
-          return user._id;
+          return dbRoom.create({projectname: 'test'}, user.id);
+        }).then(function(room) {
+          roomId = room.docName;
+          return dbUser.localReg('vasya2@test.ru', 'pass');
         }).then(function(user) {
-          dbRoom.create({projectname: 'test'}, user).then(function(room) {
-            roomId = room.docName;
-          }).then(function() {
-            dbUser.localReg('vasya2@test.ru', 'pass').then(function(user) {
-              userId = user._id;
-            }).then(function() {
-              done();
-            });
-          });
+          userId = user.id;
+          done();
         });
       });
 
@@ -237,16 +226,13 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
           userCreatorId = user.id;
-          return user._id;
+          return dbRoom.create({projectname: 'test'}, userCreatorId);
+        }).then(function(room) {
+          roomId = room.docName;
+          return dbUser.localReg('vasya2@test.ru', 'pass');
         }).then(function(user) {
-          dbRoom.create({projectname: 'test'}, user).then(function(room) {
-            roomId = room.docName;
-          }).then(function() {
-            dbUser.localReg('vasya2@test.ru', 'pass').then(function(user) {
-              userId = user._id;
-              done();
-            });
-          });
+          userId = user._id;
+          done();
         });
       });
 
@@ -291,19 +277,15 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
           userCreatorId = user.id;
-          return user._id;
+          return dbRoom.create({projectname: 'test'}, userCreatorId);
+        }).then(function(room) {
+          roomId = room.docName;
+          return dbUser.localReg('vasya2@test.ru', 'pass');
         }).then(function(user) {
-          dbRoom.create({projectname: 'test'}, user).then(function(room) {
-            roomId = room.docName;
-          }).then(function() {
-            dbUser.localReg('vasya2@test.ru', 'pass').then(function(user) {
-              userId = user._id;
-            }).then(function() {
-              dbRoom.update.addUser(roomId, userId).then(function() {
-                done();
-              });
-            });
-          });
+          userId = user._id;
+          return dbRoom.update.addUser(roomId, userId);
+        }).then(function() {
+          done();
         });
       });
 
@@ -349,13 +331,10 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
           userCreatorId = user.id;
-          return user._id;
-        }).then(function(user) {
-          dbRoom.create({projectname: 'test'}, user).then(function(room) {
-            roomId = room.docName;
-          }).then(function() {
-            done();
-          });
+          return dbRoom.create({projectname: 'test'}, userCreatorId);
+        }).then(function(room) {
+          roomId = room.docName;
+          done();
         });
       });
 
@@ -385,19 +364,15 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
           userCreatorId = user.id;
-          return user._id;
+          return dbRoom.create({projectname: 'test'}, user);
+        }).then(function(room) {
+          roomId = room.docName;
+          return dbUser.localReg('vasya2@test.ru', 'pass');
         }).then(function(user) {
-          dbRoom.create({projectname: 'test'}, user).then(function(room) {
-            roomId = room.docName;
-          }).then(function() {
-            dbUser.localReg('vasya2@test.ru', 'pass').then(function(user) {
-              userId = user._id;
-            }).then(function() {
-              dbRoom.update.addUser(roomId, userId).then(function() {
-                done();
-              });
-            });
-          });
+          userId = user._id;
+          return dbRoom.update.addUser(roomId, userId);
+        }).then(function() {
+          done();
         });
       });
 
@@ -441,19 +416,15 @@ describe('db', function() {
 
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
-          return user._id;
+          return dbRoom.create({projectname: 'test'}, user.id);
+        }).then(function(room) {
+          roomId = room.docName;
+          return dbUser.localReg(userEmail, 'pass');
         }).then(function(user) {
-          dbRoom.create({projectname: 'test'}, user).then(function(room) {
-            roomId = room.docName;
-          }).then(function() {
-            dbUser.localReg(userEmail, 'pass').then(function(user) {
-              userId = user._id;
-            }).then(function() {
-              dbRoom.update.addUser(roomId, userId).then(function() {
-                done();
-              });
-            });
-          });
+          userId = user._id;
+          return dbRoom.update.addUser(roomId, userId);
+        }).then(function() {
+          done();
         });
       });
 

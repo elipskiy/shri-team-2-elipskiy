@@ -35,10 +35,6 @@ var RoomSchema = new Schema({
     type: String,
     default: ''
   },
-  readOnly: {
-    type: Boolean,
-    default: false
-  },
   lang: {
     type: String,
     default: 'javascript'
@@ -236,6 +232,18 @@ RoomSchema.methods = {
 };
 
 RoomSchema.statics = {
+  newRoom: function(name, description, creator) {
+    return new Promise(function(resolve, reject) {
+      RoomModel.create({name: name, description: description, creator: creator}, function(err, room) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(room);
+        }
+      });
+    });
+  },
+
   getRoomFromAll: function(docName) {
     var room = this;
 

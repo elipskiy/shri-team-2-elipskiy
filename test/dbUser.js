@@ -71,7 +71,6 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg(userEmail, userPass).then(function(user) {
           userId = user._id;
-        }).then(function() {
           done();
         });
       });
@@ -103,7 +102,6 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg(userEmail, userPass).then(function(user) {
           userId = user._id;
-        }).then(function() {
           done();
         });
       });
@@ -157,10 +155,9 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg(userEmail, 'pass').then(function(user) {
           userId = user._id;
+          return dbUser.providerReg(provider, {id: providerId}, userId);
         }).then(function() {
-          dbUser.providerReg(provider, {id: providerId}, userId).then(function() {
-            done();
-          });
+          done();
         });
       });
 
@@ -191,7 +188,6 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg(userEmail, userPass).then(function(user) {
           userId = user._id;
-        }).then(function() {
           done();
         });
       });
@@ -228,7 +224,6 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg(userEmail, userPass).then(function(user) {
           userId = user._id;
-        }).then(function() {
           done();
         });
       });
@@ -262,15 +257,13 @@ describe('db', function() {
       before(function(done) {
         dbUser.localReg(userEmail, userPass).then(function(user) {
           userCreatorId = user._id;
-        }).then(function() {
-          dbRoom.create({projectname: 'test'}, userCreatorId).then(function(room) {
-            roomId = room.docName;
-            dbUser.localReg('petya@test.ru', 'userPass').then(function(user) {
-              userId = user._id;
-            }).then(function() {
-              done();
-            });
-          });
+          return dbRoom.create({projectname: 'test'}, userCreatorId);
+        }).then(function(room) {
+          roomId = room.docName;
+          return dbUser.localReg('petya@test.ru', 'userPass');
+        }).then(function(user) {
+          userId = user._id;
+          done();
         });
       });
 
