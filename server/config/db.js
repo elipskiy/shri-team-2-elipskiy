@@ -15,9 +15,11 @@ function clean() {
 module.exports = function(config) {
   mongoose.connect(config.db);
 
-  mongoose.connection.on('error', function(err) {
-    console.log(new Error('connection error:', err.message));
+  var db = mongoose.connection;
+  db.on('error', function(err) {
+    console.log(new Error('Unable to connect to database: ', err));
   });
-
-  clean();
+  db.once('open', function() {
+    clean();
+  });
 };

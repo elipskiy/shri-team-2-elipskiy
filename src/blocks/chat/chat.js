@@ -31,6 +31,8 @@ function onNewMessage(data) {
         $('<span class="message__color">').css('backgroundColor', data.user.userColor)
       )
   );
+
+  $('.chat__messages').scrollTop($('.chat__messages')[0].scrollHeight);
 }
 
 socket.on('userChatMessage', onNewMessage);
