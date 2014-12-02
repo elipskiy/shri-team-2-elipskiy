@@ -237,6 +237,10 @@ describe('db', function() {
         return should(dbUser.update.data({displayName: '', email: 'qwe@'}, userId)).to.be.rejected;
       });
 
+      it('should be rejected if user not found', function() {
+        return should(dbUser.update.data({displayName: 'test', email: 'qwe@qwe.qwe'}, 1)).to.be.rejected;
+      });
+
       it('should return email as displayName if displayNamde is empty', function() {
         return should(dbUser.update.data({displayName: '', email: 'vasya@yandex.ru'}, userId)).to.eventually.deep.property('displayName', 'vasya@yandex.ru');
       });
@@ -274,6 +278,10 @@ describe('db', function() {
 
       it('should return True if room added', function() {
         return should(dbUser.update.addRoom(userId, roomId)).to.eventually.be.true;
+      });
+
+      it('should be rejected if room added before', function() {
+        return should(dbUser.update.addRoom(userId, roomId)).to.be.rejected;
       });
 
       it('should be rejected if room deleted', function() {

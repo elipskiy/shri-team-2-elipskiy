@@ -72,6 +72,8 @@ describe('db', function() {
           return dbUser.update.addRoom(userId, roomId);
         }).then(function() {
           done();
+        }).catch(function(err) {
+          console.log(err);
         });
       });
 
