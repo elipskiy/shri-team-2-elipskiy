@@ -9,6 +9,9 @@ module.exports.require = [
     block: 'button'
   },
   {
+    block: 'hint'
+  },
+  {
     elems: ['edit', 'social']
   }
 ];

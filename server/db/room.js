@@ -31,7 +31,7 @@ function createRoom(room, creator) {
 function removeRoom(docName, userId) {
   return new Promise(function(resolve, reject) {
     RoomModel.getRoom(docName).then(function(room) {
-      if (room.creator === userId) {
+      if (room.creator.toString() === userId.toString()) {
         return room.delete();
       } else {
         return UserModel.findUserById(userId).then(function(user) {
@@ -48,8 +48,8 @@ function removeRoom(docName, userId) {
 
 function restoreRoom(docName, userId) {
   return new Promise(function(resolve, reject) {
-    RoomModel.getRoom(docName).then(function(room) {
-      if (room.creator === userId) {
+    RoomModel.getRoomFromAll(docName).then(function(room) {
+      if (room.creator.toString() === userId.toString()) {
         return room.restore();
       } else {
         return UserModel.findUserById(userId).then(function(user) {

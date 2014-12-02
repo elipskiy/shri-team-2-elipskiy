@@ -55,7 +55,7 @@ function userProviderReg(provider, profile, userId) {
     UserModel.findUserById(userId).then(function(user) {
       return user.addProvider(provider, profile.id);
     }).then(function() {
-      resolve();
+      resolve(true);
     }).catch(function(err) {
       reject(err);
     });
@@ -132,7 +132,7 @@ function userUpdateRoom(userId, docName) {
     }).then(function(user) {
       return user.addRoom(roomId);
     }).then(function() {
-      resolve();
+      resolve(true);
     }).catch(function(err) {
       reject(err);
     });

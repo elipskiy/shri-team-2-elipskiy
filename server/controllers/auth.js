@@ -24,9 +24,6 @@ exports.provider = {
       dbUser.providerAuth('github', profile.id).then(function(user) {
         if (user) {
           done(null, user);
-        } else if (!user) {
-          req.session.error = 'Could not log user in. Please try again.';
-          done(null, user);
         }
       }, function(err) {
         req.session.error = err.toString();

@@ -56,19 +56,26 @@ describe('db', function() {
     });
 
     describe('remove()', function() {
-      var userId = 1;
-      var roomId = 1;
+      var userCreatorId = '1';
+      var userId = '1';
+      var roomId = '1';
 
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
-          userId = user._id;
-          return userId;
-        }).then(function(userId) {
-          dbRoom.create({projectname: 'test'}, userId).then(function(room) {
+          userCreatorId = user._id;
+          return userCreatorId;
+        }).then(function(user) {
+          dbRoom.create({projectname: 'test'}, user).then(function(room) {
             roomId = room.docName;
-            done();
+          }).then(function() {
+            dbUser.localReg('vasya2@test.ru', 'pass').then(function(user) {
+              userId = user._id;
+              dbUser.update.addRoom(userId, roomId).then(function() {
+                done();
+              });
+            });
           });
-        })
+        });
       });
 
       after(function(done) {
@@ -84,16 +91,72 @@ describe('db', function() {
         return should(dbRoom.remove(roomId, 1)).to.be.rejected;
       });
 
-      it('should remove room', function() {
+      it('should remove the room user not creator', function() {
         return should(dbRoom.remove(roomId, userId)).to.eventually.be.true;
+      })
+
+      it('should remove room', function() {
+        return should(dbRoom.remove(roomId, userCreatorId)).to.eventually.be.true;
+      });
+
+      it('should be rejected if room not found for user not creator', function() {
+        return should(dbRoom.remove(roomId, userId)).to.be.rejected;
       });
 
     });
 
+    describe('restore()', function() {
+      var userCreatorId = '1';
+      var userId = '1';
+      var roomId = '1';
+
+      before(function(done) {
+        dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
+          userCreatorId = user._id;
+        }).then(function() {
+          dbRoom.create({projectname: 'test'}, userCreatorId).then(function(room) {
+            roomId = room.docName;
+          }).then(function() {
+            dbUser.localReg('vasya2@test.ru', 'pass').then(function(user) {
+              userId = user._id;
+              dbUser.update.addRoom(userId, roomId).then(function() {
+                done();
+              });
+            });
+          });
+        });
+      });
+
+      after(function(done) {
+        connection.db.dropDatabase();
+        done();
+      });
+
+      it('should be rejected if room name does not exist', function() {
+        return should(dbRoom.restore('1', userId)).to.be.rejected;
+      });
+
+      it('should be rejected if creator not found', function() {
+        return should(dbRoom.restore(roomId, '1')).to.be.rejected;
+      });
+
+      it('should restore the room user not creator', function() {
+        return dbRoom.remove(roomId, userId).then(function() {
+          return should(dbRoom.restore(roomId, userId)).to.eventually.be.true;
+        });
+      });
+
+      it('should restore room', function() {
+        return dbRoom.remove(roomId, userCreatorId).then(function() {
+          return should(dbRoom.restore(roomId, userCreatorId)).to.eventually.be.true;
+        });
+      });
+
+    });
 
     describe('getRoom()', function() {
-      var userId = 1;
-      var roomId = 1;
+      var userId = '1';
+      var roomId = '1';
 
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
@@ -118,6 +181,12 @@ describe('db', function() {
 
       it('should be rejected if room doesnt exist', function() {
         return should(dbRoom.get(2)).to.be.rejected;
+      });
+
+      it('should be rejected if room deleted', function() {
+        return dbRoom.remove(roomId, userId).then(function() {
+          return should(dbRoom.get(roomId)).to.be.rejected;
+        });
       });
 
     });
@@ -161,11 +230,13 @@ describe('db', function() {
 
 
     describe('update.addUser()', function() {
-      var userId = 1;
-      var roomId = 1;
+      var userCreatorId = '1';
+      var userId = '1';
+      var roomId = '1';
 
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
+          userCreatorId = user.id;
           return user._id;
         }).then(function(user) {
           dbRoom.create({projectname: 'test'}, user).then(function(room) {
@@ -204,15 +275,22 @@ describe('db', function() {
         return should(dbRoom.update.addUser(roomId, 1)).to.be.rejected;
       });
 
+      it('should be rejected if room deleted', function() {
+        return dbRoom.remove(roomId, userCreatorId).then(function() {
+          return should(dbRoom.update.addUser(roomId, userId)).to.be.rejected;
+        });
+      });
     });
 
 
     describe('update.removeUser()', function() {
+      var userCreatorId = 1;
       var userId = 1;
       var roomId = 1;
 
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
+          userCreatorId = user.id;
           return user._id;
         }).then(function(user) {
           dbRoom.create({projectname: 'test'}, user).then(function(room) {
@@ -254,15 +332,59 @@ describe('db', function() {
         return should(dbRoom.update.removeUser(2, userId)).to.be.rejected;
       });
 
+      it('should be rejected if room deleted', function() {
+        return dbRoom.remove(roomId, userCreatorId).then(function() {
+          return should(dbRoom.update.removeUser(roomId, userId)).to.be.rejected;
+        });
+      });
+
+    });
+
+    describe('update.lang()', function() {
+      var userCreatorId = 1;
+      var userId = 1;
+      var roomId = 1;
+      var lang = 'mysticalscript';
+
+      before(function(done) {
+        dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
+          userCreatorId = user.id;
+          return user._id;
+        }).then(function(user) {
+          dbRoom.create({projectname: 'test'}, user).then(function(room) {
+            roomId = room.docName;
+          }).then(function() {
+            done();
+          });
+        });
+      });
+
+      after(function(done) {
+        connection.db.dropDatabase();
+        done();
+      });
+
+      it('should return True if lang updated', function() {
+        return should(dbRoom.update.lang(roomId, lang)).to.eventually.be.true;
+      });
+
+      it('should be rejected if room deleted', function() {
+        return dbRoom.remove(roomId, userCreatorId).then(function() {
+          return should(dbRoom.update.lang(roomId, lang)).to.be.rejected;
+        });
+      });
+
     });
 
     describe('user.setCursor()', function() {
+      var userCreatorId = 1;
       var userId = 1;
       var roomId = 1;
       var cursor = {row: 1, column: 1};
 
       before(function(done) {
         dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
+          userCreatorId = user.id;
           return user._id;
         }).then(function(user) {
           dbRoom.create({projectname: 'test'}, user).then(function(room) {
@@ -302,6 +424,12 @@ describe('db', function() {
 
       it('should be rejected if position is not valid', function() {
         return should(dbRoom.user.setCursor(roomId, userId, {r:1})).to.be.rejected;
+      });
+
+      it('should be rejected if room deleted', function() {
+        return dbRoom.remove(roomId, userCreatorId).then(function() {
+          return should(dbRoom.user.setCursor(roomId, userId, cursor)).to.be.rejected;
+        });
       });
 
     });

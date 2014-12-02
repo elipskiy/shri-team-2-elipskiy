@@ -281,7 +281,7 @@ UserSchema.statics = {
             user.rooms = cleanDeletedRooms(user.rooms);
             resolve(user);
           } else {
-            resolve();
+            reject(new Error('User not found'));
           }
         });
     });

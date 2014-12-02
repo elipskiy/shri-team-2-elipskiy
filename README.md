@@ -1,7 +1,7 @@
 # Meepo
 
-[![Build Status](https://travis-ci.org/elipskiy/shri-team-2-elipskiy.svg?branch=master)](https://travis-ci.org/yandex-shri-minsk-2014/team-2)
-[![Dependencies](https://david-dm.org/elipskiy/shri-team-2-elipskiy.png)](https://david-dm.org/yandex-shri-minsk-2014/team-2)
+[![Build Status](https://travis-ci.org/elipskiy/shri-team-2-elipskiy.svg?branch=master)](https://travis-ci.org/elipskiy/shri-team-2-elipskiy)
+[![Dependencies](https://david-dm.org/elipskiy/shri-team-2-elipskiy.png)](https://david-dm.org/elipskiy/shri-team-2-elipskiy)
 [![](https://reposs.herokuapp.com/?path=elipskiy/shri-team-2-elipskiy)](https://github.com/ruddfawcett/reposs)
 
 
@@ -29,16 +29,21 @@ App development depends on npm, the Node package manager, which is distributed w
 
 ## Running
 
-Run server:
+Run mongo:
 
 ```
 mongod
+```
+
+Run server:
+
+```
 npm start
 ```
 
 The app should start on [http://localhost:3000/](http://localhost:3000/)
 
-Run server in debug mode
+Run server in debug mode:
 
 ```
 npm run dev

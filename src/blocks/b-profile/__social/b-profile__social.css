@@ -9,15 +9,34 @@
 }
 
 .social__name {
-  padding-right: 10px;
+}
+
+.social__icon {
+  display: inline-block;
+
+  margin: 0 10px;
+
+  background-size: cover;
 }
 
 .social__icon_added {
-  display: inline-block;
-
-  width: 1.3em;
-  height: 1em;
+  width: 20px;
+  height: 17px;
 
   background-image: url(/img/b-profile__social_added.svg);
-  background-size: cover;
 }
+
+/*.social__name:hover .social__icon_added{
+  width: 17px;
+  height: 17px;
+
+  background-image: url(/img/b-profile__social_remove.svg);
+}
+
+.social__icon_add {
+  width: 17px;
+  height: 17px;
+
+  background-image: url(/img/b-profile__social_add.svg);
+}
+*/

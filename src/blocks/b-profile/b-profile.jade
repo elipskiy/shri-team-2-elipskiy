@@ -26,7 +26,8 @@ mixin b-profile
       ul.edit__social
         li
           if (githubId)
-            span.social__name GitHub
-            .social__icon_added
+            span.social__name.hint(data-hint='') GitHub
+              .social__icon.social__icon_added
           else
-            a(href='/profile/github') GitHub
+            a.social__name(href='/profile/github') GitHub
+              .social__icon.social__icon_add

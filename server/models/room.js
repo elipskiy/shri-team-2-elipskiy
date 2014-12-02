@@ -236,6 +236,23 @@ RoomSchema.methods = {
 };
 
 RoomSchema.statics = {
+  getRoomFromAll: function(docName) {
+    var room = this;
+
+    return new Promise(function(resolve, reject) {
+      room.findOne({docName: docName})
+        .exec(function(err, foundRoom) {
+          if (err) {
+            reject(err);
+          } else if (foundRoom) {
+            resolve(foundRoom);
+          } else {
+            reject(new Error('Room does not exist'));
+          }
+        });
+    });
+  },
+
   getRoom: function(docName) {
     var room = this;
 
