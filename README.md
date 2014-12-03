@@ -7,6 +7,21 @@
 
 Awesome online code editor that lets people collaborate in real-time.
 
+## Что сделано:
+
+* Смена темы сайта
+* Смена языка редактора
+* Авторизация с помощью Github
+* Подгружается gravatar
+* Добавлен чат
+* Добавлена возможность сохранения чужих проектов в список своих проектов
+* Добавлено удаление проектов
+* Добавлена возможность смены пароля
+* Добавлена возможность изменения отображаемого имени
+* Сервер разбит на модули
+* Усовершенствована вёрстка по БЭМу
+* Добавлены новые тесты
+
 ## Installing
 
 App development depends on npm, the Node package manager, which is distributed with Node.js. If you haven't done so already, be sure to [download](http://nodejs.org/download/) and run the prebuilt Node.js installer for your platform from the Node.js website. Then, to run app locally, follow these steps:
