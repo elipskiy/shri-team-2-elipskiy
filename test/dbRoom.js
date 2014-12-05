@@ -38,7 +38,7 @@ describe('db', function() {
 
       after(function(done) {
         connection.db.dropDatabase();
-        done();
+        process.nextTick(done);
       });
 
       it('should create room', function() {
@@ -79,7 +79,7 @@ describe('db', function() {
 
       after(function(done) {
         connection.db.dropDatabase();
-        done();
+        process.nextTick(done);
       });
 
       it('should be rejected if room name does not exist', function() {
@@ -126,7 +126,7 @@ describe('db', function() {
 
       after(function(done) {
         connection.db.dropDatabase();
-        done();
+        process.nextTick(done);
       });
 
       it('should be rejected if room name does not exist', function() {
@@ -277,12 +277,12 @@ describe('db', function() {
       var roomId = 1;
 
       before(function(done) {
-        dbUser.localReg('vasya@test.ru', 'pass').then(function(user) {
+        dbUser.localReg('vasya3@test.ru', 'pass').then(function(user) {
           userCreatorId = user.id;
           return dbRoom.create({projectname: 'test'}, userCreatorId);
         }).then(function(room) {
           roomId = room.docName;
-          return dbUser.localReg('vasya2@test.ru', 'pass');
+          return dbUser.localReg('vasya4@test.ru', 'pass');
         }).then(function(user) {
           userId = user._id;
           return dbRoom.update.addUser(roomId, userId);

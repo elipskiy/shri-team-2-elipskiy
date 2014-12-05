@@ -2,7 +2,6 @@
 
 var dbRoom = require('../db/room');
 var debug = require('../config/config').debug;
-console.log(debug);
 
 function checkSession(socket) {
   if (socket.request.session.passport) {
